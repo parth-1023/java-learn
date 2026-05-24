@@ -9,9 +9,9 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-function mockRun(stdout, stderr = null, code = 0) {
+function mockRun({ program_output = null, program_error = null, compiler_message = null } = {}) {
   fetch.mockResolvedValueOnce({
-    json: async () => ({ run: { stdout, stderr, code } }),
+    json: async () => ({ program_output, program_error, compiler_message }),
   })
 }
 
@@ -30,7 +30,7 @@ test('sets loading while executing', async () => {
 })
 
 test('sets output on successful execution', async () => {
-  mockRun('Hello, World!\n')
+  mockRun({ program_output: 'Hello, World!\n' })
   const { result } = renderHook(() => usePiston())
   await act(() => result.current.run('public class Main {}'))
   expect(result.current.output).toBe('Hello, World!\n')
@@ -38,12 +38,19 @@ test('sets output on successful execution', async () => {
   expect(result.current.loading).toBe(false)
 })
 
-test('sets error on stderr output', async () => {
-  mockRun(null, 'error: ; expected', 1)
+test('sets error on compile failure', async () => {
+  mockRun({ compiler_message: 'error: ; expected' })
   const { result } = renderHook(() => usePiston())
   await act(() => result.current.run('public class Main {'))
   expect(result.current.error).toBe('error: ; expected')
   expect(result.current.output).toBeNull()
+})
+
+test('sets error on runtime stderr', async () => {
+  mockRun({ program_error: 'Exception in thread "main" java.lang.NullPointerException' })
+  const { result } = renderHook(() => usePiston())
+  await act(() => result.current.run('public class Main {}'))
+  expect(result.current.error).toBe('Exception in thread "main" java.lang.NullPointerException')
 })
 
 test('sets error on network failure', async () => {
@@ -54,7 +61,7 @@ test('sets error on network failure', async () => {
 })
 
 test('reset clears output and error', async () => {
-  mockRun('Hi\n')
+  mockRun({ program_output: 'Hi\n' })
   const { result } = renderHook(() => usePiston())
   await act(() => result.current.run('public class Main {}'))
   act(() => result.current.reset())
@@ -62,14 +69,13 @@ test('reset clears output and error', async () => {
   expect(result.current.error).toBeNull()
 })
 
-test('posts to Piston with correct payload', async () => {
-  mockRun('ok\n')
+test('posts to Wandbox with correct payload', async () => {
+  mockRun({ program_output: 'ok\n' })
   const { result } = renderHook(() => usePiston())
   await act(() => result.current.run('public class Main {}'))
   const [url, opts] = fetch.mock.calls[0]
-  expect(url).toBe('https://emkc.org/api/v2/piston/execute')
+  expect(url).toBe('https://wandbox.org/api/compile.json')
   const body = JSON.parse(opts.body)
-  expect(body.language).toBe('java')
-  expect(body.files[0].name).toBe('Main.java')
-  expect(body.files[0].content).toBe('public class Main {}')
+  expect(body.compiler).toBe('openjdk-head')
+  expect(body.code).toBe('public class Main {}')
 })

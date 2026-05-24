@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react'
 
-const PISTON_URL = 'https://emkc.org/api/v2/piston/execute'
+// Wandbox — free, no API key, CORS-enabled
+// Docs: https://github.com/melpon/wandbox/blob/master/kennel/API.rst
+const WANDBOX_URL = 'https://wandbox.org/api/compile.json'
 
 export function usePiston() {
   const [output, setOutput] = useState(null)
@@ -13,25 +15,29 @@ export function usePiston() {
     setError(null)
 
     try {
-      const res = await fetch(PISTON_URL, {
+      const res = await fetch(WANDBOX_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          language: 'java',
-          version: '*',
-          files: [{ name: 'Main.java', content: code }],
+          compiler: 'openjdk-head',
+          code,
         }),
       })
 
       const data = await res.json()
-      const { stdout, stderr, code: exitCode } = data.run
 
-      if (stdout) setOutput(stdout)
-      else if (stderr) setError(stderr)
-      else if (exitCode !== 0) setError('Program exited with a non-zero status.')
-      else setOutput('(no output)')
-    } catch {
-      setError('Code execution unavailable. Check your connection.')
+      // Compile error
+      if (data.compiler_message) {
+        setError(data.compiler_message)
+      } else if (data.program_output) {
+        setOutput(data.program_output)
+      } else if (data.program_error) {
+        setError(data.program_error)
+      } else {
+        setOutput('(no output)')
+      }
+    } catch (err) {
+      setError(`Code execution unavailable: ${err.message}`)
     } finally {
       setLoading(false)
     }
