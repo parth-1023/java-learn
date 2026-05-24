@@ -159,7 +159,7 @@
     "examples": [
       { "label": "Optional usage", "code": "Optional<String> name = Optional.ofNullable(getUserName());\nString display = name\n    .filter(n -> !n.isEmpty())\n    .map(String::toUpperCase)\n    .orElse(\"Anonymous\");\nSystem.out.println(display);" }
     ],
-    "starterCode": "public class Main {\n    static Optional<String> findUser(int id) {\n        if (id == 1) return Optional.of(\"Alice\");\n        return Optional.empty();\n    }\n    public static void main(String[] args) {\n        // Call findUser(1) and findUser(99)\n        // Use orElse() to print the name or \"Not found\"\n    }\n}"
+    "starterCode": "import java.util.Optional;\n\npublic class Main {\n    static Optional<String> findUser(int id) {\n        if (id == 1) return Optional.of(\"Alice\");\n        return Optional.empty();\n    }\n    public static void main(String[] args) {\n        // Call findUser(1) and findUser(99)\n        // Use orElse() to print the name or \"Not found\"\n    }\n}"
   },
   {
     "id": "oop/comparing-objects",
