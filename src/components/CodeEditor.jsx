@@ -1,12 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 import Editor from '@monaco-editor/react'
-import { useJudge0 } from '../hooks/useJudge0'
+import { usePiston } from '../hooks/usePiston'
 import OutputPanel from './OutputPanel'
 
 export default function CodeEditor({ starterCode }) {
   const editorRef = useRef(null)
   const [code, setCode] = useState(starterCode)
-  const { run, reset, output, error, loading } = useJudge0()
+  const { run, reset, output, error, loading } = usePiston()
 
   // Reset editor content when the article changes
   useEffect(() => {
