@@ -19,12 +19,19 @@ export function usePiston() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          compiler: 'openjdk-head',
+          compiler: 'openjdk-jdk-22+36',
           code,
         }),
       })
 
-      const data = await res.json()
+      const text = await res.text()
+      let data
+      try {
+        data = JSON.parse(text)
+      } catch {
+        setError(`Execution failed: ${text.slice(0, 200)}`)
+        return
+      }
 
       // Compile error
       if (data.compiler_message) {

@@ -11,7 +11,7 @@ afterEach(() => {
 
 function mockRun({ program_output = null, program_error = null, compiler_message = null } = {}) {
   fetch.mockResolvedValueOnce({
-    json: async () => ({ program_output, program_error, compiler_message }),
+    text: async () => JSON.stringify({ program_output, program_error, compiler_message }),
   })
 }
 
@@ -76,6 +76,6 @@ test('posts to Wandbox with correct payload', async () => {
   const [url, opts] = fetch.mock.calls[0]
   expect(url).toBe('https://wandbox.org/api/compile.json')
   const body = JSON.parse(opts.body)
-  expect(body.compiler).toBe('openjdk-head')
+  expect(body.compiler).toBe('openjdk-jdk-22+36')
   expect(body.code).toBe('public class Main {}')
 })
