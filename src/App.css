@@ -426,11 +426,38 @@ body.light .toggle-thumb { transform: translateX(18px); }
 
 /* ── CODE EDITOR ── */
 .editor-pane {
-  height: 260px;
+  height: 100%;           /* fills the resizable wrapper in ArticleView */
   display: flex;
   flex-direction: column;
   background: var(--bg-editor);
+}
+
+/* ── RESIZE HANDLE ── */
+.editor-resize-handle {
+  height: 6px;
   flex-shrink: 0;
+  background: var(--border);
+  cursor: row-resize;
+  position: relative;
+  transition: background 0.15s;
+}
+.editor-resize-handle:hover,
+.editor-resize-handle:active {
+  background: var(--accent-orange);
+}
+.editor-resize-handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+.editor-resize-handle:hover::after {
+  background: var(--accent-orange);
 }
 
 .editor-toolbar {

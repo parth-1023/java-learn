@@ -1,8 +1,39 @@
+import { useState, useCallback } from 'react'
 import Markdown from 'react-markdown'
 import ExampleBlock from './ExampleBlock'
 import CodeEditor from './CodeEditor'
 
+const MIN_HEIGHT = 120
+const MAX_HEIGHT = 700
+const DEFAULT_HEIGHT = 280
+
 export default function ArticleView({ article, isComplete, onMarkDone, onMarkUndone }) {
+  const [editorHeight, setEditorHeight] = useState(DEFAULT_HEIGHT)
+
+  const handleDragStart = useCallback((e) => {
+    e.preventDefault()
+    const startY = e.clientY
+    const startHeight = editorHeight
+
+    const onMouseMove = (e) => {
+      const delta = startY - e.clientY   // drag up → bigger editor
+      const next = Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, startHeight + delta))
+      setEditorHeight(next)
+    }
+
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+
+    document.body.style.cursor = 'row-resize'
+    document.body.style.userSelect = 'none'
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+  }, [editorHeight])
+
   if (!article) return <div className="article-pane"><p className="placeholder">Select an article to begin.</p></div>
 
   return (
@@ -41,7 +72,13 @@ export default function ArticleView({ article, isComplete, onMarkDone, onMarkUnd
         ))}
       </div>
 
-      <CodeEditor starterCode={article.starterCode} />
+      {/* Drag handle */}
+      <div className="editor-resize-handle" onMouseDown={handleDragStart} title="Drag to resize editor" />
+
+      {/* Editor wrapper — height controlled by drag */}
+      <div style={{ height: editorHeight, flexShrink: 0, overflow: 'hidden' }}>
+        <CodeEditor starterCode={article.starterCode} />
+      </div>
     </div>
   )
 }
