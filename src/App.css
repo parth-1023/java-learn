@@ -321,3 +321,105 @@ body.light .toggle-thumb { transform: translateX(18px); }
 }
 
 .progress-count { color: var(--accent-orange); }
+
+/* ── CONTENT AREA ── */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.article-pane {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  border-bottom: 2px solid var(--border);
+}
+
+.article-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.article-meta {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent-orange);
+  margin-bottom: 6px;
+}
+
+.article-title {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.article-body {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.article-body strong { color: var(--text-primary); }
+.article-body code {
+  background: var(--bg-code-block);
+  color: var(--accent-yellow);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+.article-body table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+.article-body th, .article-body td { border: 1px solid var(--border); padding: 6px 10px; font-size: 12px; }
+.article-body th { background: var(--bg-sidebar); font-weight: 700; }
+
+/* ── EXAMPLE BLOCK ── */
+.example-block {
+  background: var(--bg-code-block);
+  border: 2px solid var(--border);
+  box-shadow: 3px 3px 0 var(--border-strong);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.example-header {
+  background: var(--bg-code-header);
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.example-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.example-code {
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.placeholder {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-top: 40px;
+  text-align: center;
+}
