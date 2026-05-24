@@ -423,3 +423,96 @@ body.light .toggle-thumb { transform: translateX(18px); }
   margin-top: 40px;
   text-align: center;
 }
+
+/* ── CODE EDITOR ── */
+.editor-pane {
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-editor);
+  flex-shrink: 0;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 16px;
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+.editor-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editor-label-text {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.editor-body {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── OUTPUT STRIP ── */
+.output-strip {
+  height: 40px;
+  background: var(--bg-output);
+  border-top: 1px solid var(--border);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.output-label {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.output-stdout {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-green);
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.output-error {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-red);
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.output-spinner {
+  font-size: 14px;
+  color: var(--accent-orange);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
