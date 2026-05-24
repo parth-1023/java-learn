@@ -1,0 +1,29 @@
+[
+  {
+    "id": "arrays/reference-guide",
+    "title": "Arrays in Java: A Reference Guide",
+    "body": "An **array** is a fixed-size, ordered container of elements of the same type. Array size is set at creation and cannot change.\n\nDeclaration and creation:\n```java\nint[] nums = new int[5];          // zero-initialized\nString[] names = {\"Alice\", \"Bob\"}; // initializer\n```\n\nKey characteristics:\n- Zero-indexed: first element is `array[0]`, last is `array[length-1]`\n- `array.length` gives the size (not a method call)\n- Accessing out-of-bounds throws `ArrayIndexOutOfBoundsException`\n- Arrays are objects stored on the heap\n- All elements must be the same type\n\nMultidimensional arrays are arrays of arrays:\n```java\nint[][] matrix = new int[3][4];\n```\n\nUse `Arrays.sort()`, `Arrays.fill()`, `Arrays.copyOf()`, and `Arrays.toString()` from `java.util.Arrays` for common operations.",
+    "examples": [
+      { "label": "Array basics", "code": "int[] scores = {85, 92, 78, 95, 88};\nSystem.out.println(scores.length); // 5\nSystem.out.println(scores[0]);     // 85\n\n// Sort\njava.util.Arrays.sort(scores);\nSystem.out.println(java.util.Arrays.toString(scores)); // [78, 85, 88, 92, 95]" }
+    ],
+    "starterCode": "import java.util.Arrays;\npublic class Main {\n    public static void main(String[] args) {\n        int[] temps = {72, 68, 75, 80, 65, 70, 78};\n        // 1. Print the array using Arrays.toString()\n        // 2. Sort the array and print again\n        // 3. Find and print the maximum temperature\n        // 4. Calculate and print the average temperature\n    }\n}"
+  },
+  {
+    "id": "arrays/initializing",
+    "title": "Initializing Arrays in Java",
+    "body": "Java provides several ways to initialize arrays:\n\n**1. Declaration + allocation:**\n```java\nint[] arr = new int[5]; // all zeros\n```\n\n**2. Declaration + initializer list:**\n```java\nint[] arr = {1, 2, 3, 4, 5};\n```\n\n**3. New keyword + initializer:**\n```java\nint[] arr = new int[]{1, 2, 3};\n```\n\n**4. `Arrays.fill()`:**\n```java\nint[] arr = new int[5];\nArrays.fill(arr, 7); // {7, 7, 7, 7, 7}\n```\n\n**Default values** for uninitialized elements:\n- `int`/`long`/`short`/`byte`: `0`\n- `float`/`double`: `0.0`\n- `boolean`: `false`\n- `char`: `'\\u0000'`\n- Object types: `null`\n\nMultidimensional arrays can be initialized with nested braces: `{{1,2},{3,4}}`.",
+    "examples": [
+      { "label": "Multiple initialization styles", "code": "// Style 1: empty\nboolean[] flags = new boolean[3]; // {false, false, false}\n\n// Style 2: literal\nString[] days = {\"Mon\", \"Tue\", \"Wed\"};\n\n// Style 3: Arrays.fill\ndouble[] prices = new double[4];\njava.util.Arrays.fill(prices, 9.99);\n\n// 2D\nint[][] grid = {{1,2},{3,4},{5,6}};" }
+    ],
+    "starterCode": "import java.util.Arrays;\npublic class Main {\n    public static void main(String[] args) {\n        // 1. Create a 5-element int array initialized to all 1s using Arrays.fill\n        // 2. Create a 3x3 int[][] identity matrix (1s on diagonal, 0s elsewhere)\n        // 3. Print both arrays\n        int[] ones = new int[5];\n        // fill with 1\n        int[][] identity = new int[3][3];\n        // fill diagonal\n        System.out.println(Arrays.toString(ones));\n    }\n}"
+  },
+  {
+    "id": "arrays/util-arrays",
+    "title": "Guide to the java.util.Arrays Class",
+    "body": "`java.util.Arrays` is a utility class providing static methods for common array operations.\n\n**Sorting:**\n- `Arrays.sort(arr)` — sorts in ascending order (uses dual-pivot Quicksort for primitives, TimSort for objects)\n- `Arrays.sort(arr, comparator)` — custom sort order\n- `Arrays.parallelSort(arr)` — uses fork/join for large arrays\n\n**Searching:**\n- `Arrays.binarySearch(arr, key)` — O(log n), array must be sorted first\n\n**Copying:**\n- `Arrays.copyOf(arr, newLength)` — truncates or pads with defaults\n- `Arrays.copyOfRange(arr, from, to)` — sub-array\n\n**Comparing:**\n- `Arrays.equals(a, b)` — element-wise equality\n- `Arrays.deepEquals(a, b)` — for nested arrays\n\n**Other:**\n- `Arrays.fill(arr, val)` — set all elements\n- `Arrays.toString(arr)` — readable string\n- `Arrays.asList(arr)` — converts to fixed-size `List`\n- `Arrays.stream(arr)` — converts to stream",
+    "examples": [
+      { "label": "Common Arrays operations", "code": "import java.util.Arrays;\n\nint[] a = {3, 1, 4, 1, 5, 9, 2, 6};\nArrays.sort(a);\nSystem.out.println(Arrays.toString(a));\n\nint idx = Arrays.binarySearch(a, 5);\nSystem.out.println(\"5 is at index: \" + idx);\n\nint[] copy = Arrays.copyOf(a, 4);\nSystem.out.println(Arrays.toString(copy));" }
+    ],
+    "starterCode": "import java.util.Arrays;\npublic class Main {\n    public static void main(String[] args) {\n        String[] words = {\"banana\", \"apple\", \"cherry\", \"date\"};\n        // 1. Sort the array\n        // 2. Binary search for \"cherry\" and print its index\n        // 3. Copy only the first 2 elements\n        // 4. Compare the original sorted array with itself using Arrays.equals\n    }\n}"
+  }
+]

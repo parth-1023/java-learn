@@ -1,0 +1,92 @@
+[
+  {
+    "id": "collections/arraylist",
+    "title": "Guide to the Java ArrayList",
+    "body": "`ArrayList<E>` is a resizable-array implementation of the `List` interface. It stores elements in insertion order and allows duplicates.\n\nKey operations:\n- `add(e)` — append; `add(index, e)` — insert\n- `get(index)` — retrieve; `set(index, e)` — replace\n- `remove(index)` or `remove(Object)` — delete\n- `size()` — number of elements\n- `contains(e)` — membership test (linear search)\n- `indexOf(e)` — first occurrence index\n- `clear()` — remove all elements\n- `subList(from, to)` — view of a range\n\nPerformance:\n- `get/set`: O(1)\n- `add` at end: amortized O(1)\n- `add/remove` at middle: O(n)\n\nPrefer `ArrayList` for random access; `LinkedList` for frequent insertions/deletions at arbitrary positions. Use `Collections.unmodifiableList()` or `List.of()` for immutable lists.",
+    "examples": [
+      { "label": "ArrayList basics", "code": "import java.util.ArrayList;\nimport java.util.Collections;\n\nArrayList<String> fruits = new ArrayList<>();\nfruits.add(\"Apple\");\nfruits.add(\"Banana\");\nfruits.add(\"Cherry\");\nCollections.sort(fruits);\nSystem.out.println(fruits);" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<Integer> numbers = new ArrayList<>();\n        // Add numbers 1 through 10\n        // Remove all even numbers\n        // Print the remaining list\n        // Print the size\n    }\n}"
+  },
+  {
+    "id": "collections/linkedlist",
+    "title": "A Guide to the Java LinkedList",
+    "body": "`LinkedList<E>` is a doubly-linked list implementing both `List` and `Deque`. Each element is a node holding the value plus references to the previous and next nodes.\n\nUnique operations (via `Deque`):\n- `addFirst(e)` / `addLast(e)` — O(1) head/tail insertion\n- `removeFirst()` / `removeLast()` — O(1) head/tail removal\n- `peekFirst()` / `peekLast()` — inspect without removing\n- `poll()` — retrieves and removes the head\n\nPerformance:\n- `add/remove` at head or tail: O(1)\n- `get(index)`: O(n) — must traverse from head\n\nUse `LinkedList` as a **queue** (`add`/`poll`), **stack** (`push`/`pop`), or **deque**. Use `ArrayDeque` for pure queue/stack needs — it is faster and uses less memory.",
+    "examples": [
+      { "label": "LinkedList as a queue", "code": "import java.util.LinkedList;\nimport java.util.Queue;\n\nQueue<String> queue = new LinkedList<>();\nqueue.offer(\"first\");\nqueue.offer(\"second\");\nqueue.offer(\"third\");\nwhile (!queue.isEmpty()) {\n    System.out.println(queue.poll()); // FIFO order\n}" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        // Use LinkedList as a stack (LIFO)\n        Deque<String> stack = new LinkedList<>();\n        stack.push(\"A\");\n        stack.push(\"B\");\n        stack.push(\"C\");\n        // Pop and print all elements (should print C, B, A)\n        while (!stack.isEmpty()) {\n            System.out.println(stack.pop());\n        }\n    }\n}"
+  },
+  {
+    "id": "collections/diamond",
+    "title": "Guide to the Diamond Operator in Java",
+    "body": "The **diamond operator** `<>` (Java 7+) allows the compiler to infer the generic type arguments from context, reducing verbosity.\n\nBefore Java 7:\n```java\nMap<String, List<Integer>> map = new HashMap<String, List<Integer>>();\n```\n\nWith diamond operator:\n```java\nMap<String, List<Integer>> map = new HashMap<>();\n```\n\nThe compiler infers `<String, List<Integer>>` from the left side.\n\nJava 9 extended diamond inference to anonymous classes:\n```java\nComparator<String> c = new Comparator<>() {\n    public int compare(String a, String b) { return a.compareTo(b); }\n};\n```\n\nThe diamond operator is purely a compiler feature — the bytecode is identical. It reduces typos in complex generic type arguments and keeps the right side cleaner.",
+    "examples": [
+      { "label": "Diamond operator usage", "code": "import java.util.*;\n\nList<String> list = new ArrayList<>();\nMap<String, Integer> map = new HashMap<>();\nSet<Map.Entry<String, Integer>> entries = new HashSet<>();\n\nlist.add(\"Java\");\nmap.put(\"Java\", 1995);" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        // Create these using the diamond operator:\n        // 1. A Map<String, List<String>> for grouping words by first letter\n        Map<String, List<String>> groups = new HashMap<>();\n        String[] words = {\"apple\", \"avocado\", \"banana\", \"blueberry\", \"cherry\"};\n        for (String word : words) {\n            String key = String.valueOf(word.charAt(0));\n            groups.computeIfAbsent(key, k -> new ArrayList<>()).add(word);\n        }\n        System.out.println(groups);\n    }\n}"
+  },
+  {
+    "id": "collections/comparator",
+    "title": "Comparator and Comparable in Java",
+    "body": "Two interfaces define ordering in Java:\n\n**`Comparable<T>`** — natural ordering, implemented by the class itself:\n```java\nclass Student implements Comparable<Student> {\n    public int compareTo(Student other) {\n        return this.name.compareTo(other.name);\n    }\n}\n```\n\n**`Comparator<T>`** — external ordering, defined outside the class:\n```java\nComparator<Student> byGrade = Comparator.comparingInt(Student::getGrade).reversed();\n```\n\n`Comparator` is a functional interface — it can be expressed as a lambda. Chain with `.thenComparing()` for secondary sorts.\n\nUse `Comparable` for the \"natural\" order (e.g., `String` alphabetically). Use `Comparator` for alternative orderings or when you can't modify the class.",
+    "examples": [
+      { "label": "Comparator with method reference", "code": "import java.util.*;\n\nList<String> names = new ArrayList<>(Arrays.asList(\"Charlie\", \"Alice\", \"Bob\"));\nnames.sort(Comparator.naturalOrder());\nSystem.out.println(names);\n\nnames.sort(Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder()));\nSystem.out.println(names);" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    record Product(String name, double price, int stock) {}\n    public static void main(String[] args) {\n        List<Product> products = new ArrayList<>(List.of(\n            new Product(\"Widget\", 9.99, 100),\n            new Product(\"Gadget\", 24.99, 50),\n            new Product(\"Doohickey\", 4.99, 200)\n        ));\n        // Sort by price ascending, then by name alphabetically as tiebreaker\n        products.sort(Comparator.comparingDouble(Product::price).thenComparing(Product::name));\n        products.forEach(System.out::println);\n    }\n}"
+  },
+  {
+    "id": "collections/generics",
+    "title": "The Basics of Java Generics",
+    "body": "**Generics** allow classes, interfaces, and methods to work with any type while providing compile-time type safety — no casts, no `ClassCastException` at runtime.\n\n```java\nclass Box<T> {\n    private T value;\n    Box(T value) { this.value = value; }\n    T get() { return value; }\n}\nBox<String> box = new Box<>(\"hello\");\nString s = box.get(); // no cast needed\n```\n\n**Type parameters** by convention: `T` (type), `E` (element), `K/V` (key/value), `R` (return).\n\n**Wildcards:**\n- `?` — unknown type\n- `? extends T` — upper bound (read-only covariance)\n- `? super T` — lower bound (write-only contravariance)\n\n**Type erasure:** generic type info is erased at runtime. `List<String>` and `List<Integer>` are both `List` at runtime.",
+    "examples": [
+      { "label": "Generic method", "code": "public static <T extends Comparable<T>> T max(T a, T b) {\n    return a.compareTo(b) >= 0 ? a : b;\n}\n\nSystem.out.println(max(3, 7));       // 7\nSystem.out.println(max(\"cat\", \"dog\")); // dog" }
+    ],
+    "starterCode": "public class Main {\n    // Create a generic Pair<A, B> class that holds two values of potentially different types\n    // Add getFirst(), getSecond(), and swap() methods\n    static class Pair<A, B> {\n        A first;\n        B second;\n        Pair(A first, B second) { this.first = first; this.second = second; }\n        // Add methods\n    }\n    public static void main(String[] args) {\n        Pair<String, Integer> p = new Pair<>(\"hello\", 42);\n        System.out.println(p.first + \" \" + p.second);\n    }\n}"
+  },
+  {
+    "id": "collections/hashset",
+    "title": "A Guide to HashSet in Java",
+    "body": "`HashSet<E>` is an unordered collection of unique elements backed by a `HashMap`. It provides O(1) average time for `add`, `remove`, and `contains`.\n\nKey characteristics:\n- No duplicate elements (determined by `equals()` and `hashCode()`)\n- No guaranteed iteration order\n- Allows one `null` element\n- Not thread-safe\n\nCommon operations:\n- `add(e)` — adds element; returns `false` if already present\n- `remove(e)` — removes element\n- `contains(e)` — membership test\n- `size()`, `isEmpty()`, `clear()`\n- `addAll(collection)` — union\n- `retainAll(collection)` — intersection\n- `removeAll(collection)` — difference\n\nUse `LinkedHashSet` to maintain insertion order, or `TreeSet` for sorted order.",
+    "examples": [
+      { "label": "HashSet operations", "code": "import java.util.*;\n\nSet<String> set = new HashSet<>();\nset.add(\"Java\");\nset.add(\"Python\");\nset.add(\"Java\"); // duplicate, not added\nSystem.out.println(set.size()); // 2\nSystem.out.println(set.contains(\"Java\")); // true\n\nSet<Integer> a = new HashSet<>(Set.of(1,2,3,4));\nSet<Integer> b = new HashSet<>(Set.of(3,4,5,6));\na.retainAll(b); // intersection\nSystem.out.println(a); // [3, 4]" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        String[] words = {\"the\", \"quick\", \"brown\", \"fox\", \"the\", \"quick\"};\n        // Use HashSet to find unique words and print count\n        Set<String> unique = new HashSet<>(Arrays.asList(words));\n        System.out.println(\"Unique words: \" + unique.size());\n        // Find words present in both arrays using retainAll\n        String[] moreWords = {\"fox\", \"jumps\", \"over\", \"the\"};\n        Set<String> common = new HashSet<>(Arrays.asList(words));\n        common.retainAll(new HashSet<>(Arrays.asList(moreWords)));\n        System.out.println(\"Common: \" + common);\n    }\n}"
+  },
+  {
+    "id": "collections/hashmap",
+    "title": "A Guide to Java HashMap",
+    "body": "`HashMap<K,V>` stores key-value pairs with O(1) average time for `put`, `get`, and `remove`. Keys must have correct `equals()` and `hashCode()` implementations.\n\nKey characteristics:\n- Keys are unique; values can be duplicated\n- Allows one `null` key and multiple `null` values\n- Iteration order is not guaranteed\n- Not thread-safe (use `ConcurrentHashMap` for concurrent access)\n\nUseful methods:\n- `put(k, v)`, `get(k)`, `remove(k)`, `containsKey(k)`, `containsValue(v)`\n- `getOrDefault(k, default)` — safe get\n- `putIfAbsent(k, v)` — only puts if key absent\n- `computeIfAbsent(k, fn)` — compute and store if absent\n- `merge(k, v, fn)` — update existing value\n- `forEach((k, v) -> ...)` — iterate entries\n- `entrySet()`, `keySet()`, `values()` — views",
+    "examples": [
+      { "label": "Word frequency counter", "code": "import java.util.*;\n\nString text = \"the cat sat on the mat\";\nMap<String, Integer> freq = new HashMap<>();\nfor (String word : text.split(\" \")) {\n    freq.merge(word, 1, Integer::sum);\n}\nSystem.out.println(freq);" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        // Build a phone book: Map<String, String> name -> phone number\n        Map<String, String> phoneBook = new HashMap<>();\n        phoneBook.put(\"Alice\", \"555-1234\");\n        phoneBook.put(\"Bob\", \"555-5678\");\n        // Look up Alice's number using getOrDefault\n        // Try looking up \"Charlie\" with a default of \"Not found\"\n        // Add \"Charlie\": \"555-9999\" only if not already present using putIfAbsent\n        // Print all entries\n    }\n}"
+  },
+  {
+    "id": "collections/init-hashmap",
+    "title": "Initialize a HashMap in Java",
+    "body": "There are several ways to initialize a `HashMap` in Java:\n\n**1. Empty then `put`:**\n```java\nMap<String, Integer> map = new HashMap<>();\nmap.put(\"a\", 1);\n```\n\n**2. Copy constructor from another map:**\n```java\nMap<String, Integer> copy = new HashMap<>(existingMap);\n```\n\n**3. `Map.of()` (Java 9+) — immutable, up to 10 entries:**\n```java\nMap<String, Integer> map = Map.of(\"a\", 1, \"b\", 2);\n```\n\n**4. `Map.ofEntries()` — immutable, any number:**\n```java\nMap<String, Integer> map = Map.ofEntries(\n    Map.entry(\"a\", 1),\n    Map.entry(\"b\", 2)\n);\n```\n\n**5. `Map.copyOf()` — immutable copy:**\n```java\nMap<String, Integer> immutable = Map.copyOf(mutableMap);\n```\n\n`Map.of()` and `Map.ofEntries()` throw `NullPointerException` for null keys or values and `IllegalArgumentException` for duplicate keys.",
+    "examples": [
+      { "label": "Map.ofEntries initialization", "code": "import java.util.*;\n\nvar config = Map.ofEntries(\n    Map.entry(\"host\", \"localhost\"),\n    Map.entry(\"port\", \"8080\"),\n    Map.entry(\"debug\", \"false\")\n);\nSystem.out.println(config.get(\"host\"));" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        // Create a mutable map with 3 HTTP status codes: 200, 404, 500\n        Map<Integer, String> status = new HashMap<>();\n        status.put(200, \"OK\");\n        // Add 404 and 500\n\n        // Create an immutable copy using Map.copyOf()\n        Map<Integer, String> immutable = Map.copyOf(status);\n        System.out.println(immutable.get(404));\n\n        // Try to put into the immutable map and catch the exception\n    }\n}"
+  },
+  {
+    "id": "collections/iterator",
+    "title": "A Guide to Iterator in Java",
+    "body": "`Iterator<E>` provides a standard way to traverse a collection and safely remove elements during iteration.\n\n```java\nIterator<String> it = list.iterator();\nwhile (it.hasNext()) {\n    String s = it.next();\n    if (s.isEmpty()) it.remove(); // safe removal\n}\n```\n\nKey methods:\n- `hasNext()` — returns `true` if more elements remain\n- `next()` — returns the next element and advances the cursor\n- `remove()` — removes the last element returned by `next()` (optional operation)\n\n**`ListIterator<E>`** extends `Iterator` with:\n- `hasPrevious()`, `previous()` — bidirectional traversal\n- `set(e)` — replace current element\n- `add(e)` — insert during iteration\n\nModifying a collection while iterating (without using `Iterator.remove()`) causes `ConcurrentModificationException`. Java 8+ alternatives: `removeIf()`, streams.",
+    "examples": [
+      { "label": "Remove with iterator", "code": "import java.util.*;\n\nList<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6));\nIterator<Integer> it = nums.iterator();\nwhile (it.hasNext()) {\n    if (it.next() % 2 == 0) it.remove();\n}\nSystem.out.println(nums); // [1, 3, 5]" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        List<String> words = new ArrayList<>(Arrays.asList(\n            \"apple\", \"\", \"banana\", \"  \", \"cherry\", \"\"\n        ));\n        // Use an Iterator to remove all blank/empty strings\n        // Print the cleaned list\n        // Then use removeIf() to remove strings with length < 6\n        System.out.println(words);\n    }\n}"
+  },
+  {
+    "id": "collections/array-list",
+    "title": "Converting Between an Array and a List in Java",
+    "body": "Converting between arrays and lists is a common operation.\n\n**Array → List:**\n- `Arrays.asList(arr)` — fixed-size list (cannot add/remove, but can set)\n- `new ArrayList<>(Arrays.asList(arr))` — mutable list\n- `List.of(elements)` — immutable list (Java 9+)\n- `Arrays.stream(arr).collect(Collectors.toList())` — via streams\n\n**List → Array:**\n- `list.toArray()` — returns `Object[]`\n- `list.toArray(new String[0])` — returns typed array (preferred)\n- `list.stream().mapToInt(Integer::intValue).toArray()` — for primitive arrays\n\n**Important:** `Arrays.asList()` wraps an existing array — changes to the list are reflected in the array and vice versa. Primitive arrays (`int[]`) cannot be directly used with `Arrays.asList()` — use `Integer[]` instead.",
+    "examples": [
+      { "label": "Array ↔ List conversions", "code": "import java.util.*;\n\n// Array → mutable List\nString[] arr = {\"a\", \"b\", \"c\"};\nList<String> list = new ArrayList<>(Arrays.asList(arr));\nlist.add(\"d\"); // OK\n\n// List → Array\nString[] back = list.toArray(new String[0]);\nSystem.out.println(Arrays.toString(back));" }
+    ],
+    "starterCode": "import java.util.*;\nimport java.util.stream.*;\npublic class Main {\n    public static void main(String[] args) {\n        // 1. Convert String[] to mutable List, add \"java\", print\n        String[] langs = {\"python\", \"rust\", \"go\"};\n        \n        // 2. Convert the list back to String[] and print with Arrays.toString\n\n        // 3. Convert int[] to List<Integer> using streams\n        int[] nums = {1, 2, 3, 4, 5};\n        List<Integer> intList = Arrays.stream(nums).boxed().collect(Collectors.toList());\n        System.out.println(intList);\n    }\n}"
+  }
+]

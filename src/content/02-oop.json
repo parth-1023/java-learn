@@ -1,0 +1,290 @@
+[
+  {
+    "id": "oop/classes-objects",
+    "title": "Java Classes and Objects",
+    "body": "A **class** is a blueprint that defines fields (state) and methods (behavior). An **object** is a specific instance of a class created at runtime.\n\nA class declaration includes:\n- Fields to hold data\n- A constructor to initialize the object\n- Methods to expose behavior\n\n```java\npublic class Car {\n    String color;\n    int speed;\n    void accelerate() { speed += 10; }\n}\n```\n\nObjects are created with `new`, which allocates memory and calls the constructor. Each object has its own copy of instance fields but shares method code with all instances of the class.\n\nClasses support encapsulation by making fields `private` and exposing them through getter/setter methods, protecting internal state from unintended modification.",
+    "examples": [
+      { "label": "Define and instantiate a class", "code": "public class Dog {\n    String name;\n    int age;\n    void bark() { System.out.println(name + \" says: Woof!\"); }\n}\n\nDog d = new Dog();\nd.name = \"Rex\";\nd.age = 3;\nd.bark();" }
+    ],
+    "starterCode": "public class Main {\n    static class Rectangle {\n        // Add width and height fields\n        // Add an area() method\n    }\n    public static void main(String[] args) {\n        Rectangle r = new Rectangle();\n        // Set width and height, then print the area\n    }\n}"
+  },
+  {
+    "id": "oop/concrete-class",
+    "title": "Concrete Class in Java",
+    "body": "A **concrete class** is a fully implemented class — it provides implementations for all its methods and can be instantiated directly with `new`.\n\nThis contrasts with:\n- **Abstract classes** — cannot be instantiated; may have unimplemented methods\n- **Interfaces** — define contracts without implementation (before Java 8 default methods)\n\nA concrete class may extend an abstract class or implement interfaces, but it must provide a body for every abstract method it inherits.\n\nMost everyday classes — `String`, `ArrayList`, `HashMap` — are concrete classes. When designing a system, prefer depending on interfaces or abstract types so you can swap concrete implementations without changing client code.",
+    "examples": [
+      { "label": "Concrete class implementing an interface", "code": "interface Shape {\n    double area();\n}\n\npublic class Circle implements Shape {\n    double radius;\n    Circle(double r) { this.radius = r; }\n    public double area() { return Math.PI * radius * radius; }\n}\n\nCircle c = new Circle(5);\nSystem.out.println(c.area());" }
+    ],
+    "starterCode": "public class Main {\n    interface Greeter {\n        String greet(String name);\n    }\n\n    // Create a concrete class FormalGreeter that implements Greeter\n    // greet() should return \"Good day, <name>.\"\n\n    public static void main(String[] args) {\n        // Instantiate FormalGreeter and print a greeting\n    }\n}"
+  },
+  {
+    "id": "oop/access-modifiers",
+    "title": "Access Modifiers in Java",
+    "body": "Access modifiers control the visibility of classes, fields, and methods.\n\n| Modifier | Class | Package | Subclass | World |\n|----------|-------|---------|----------|-------|\n| `public` | yes | yes | yes | yes |\n| `protected` | yes | yes | yes | no |\n| *(none)* | yes | yes | no | no |\n| `private` | yes | no | no | no |\n\n**Best practice:** use the most restrictive modifier possible.\n- Fields: almost always `private`\n- Helper methods: `private`\n- API methods: `public`\n- Members intended only for subclasses: `protected`\n\nAccess modifiers enforce encapsulation — a core OOP principle that hides implementation details from the outside world.",
+    "examples": [
+      { "label": "Access modifier usage", "code": "public class BankAccount {\n    private double balance;\n\n    public void deposit(double amount) {\n        if (amount > 0) balance += amount;\n    }\n\n    public double getBalance() { return balance; }\n}" }
+    ],
+    "starterCode": "public class Main {\n    static class Person {\n        // Add private fields: name (String) and age (int)\n        // Add a public constructor\n        // Add public getters for name and age\n        // Add a private helper: isAdult() returning boolean\n    }\n    public static void main(String[] args) {\n        // Create a Person and print name and age\n    }\n}"
+  },
+  {
+    "id": "oop/constructors",
+    "title": "A Guide to Constructors in Java",
+    "body": "A **constructor** is a special method called when an object is created. It initializes the object's state.\n\nKey rules:\n- Same name as the class\n- No return type (not even `void`)\n- Can be overloaded (multiple constructors with different parameters)\n\n**Default constructor:** If you declare no constructors, Java provides a no-arg constructor automatically. As soon as you declare any constructor, the default is removed.\n\n**Constructor chaining:** Use `this(...)` to call another constructor in the same class, or `super(...)` to call the parent constructor. These must be the first statement in the constructor body.",
+    "examples": [
+      { "label": "Constructor overloading", "code": "public class Point {\n    int x, y;\n    Point() { this(0, 0); }\n    Point(int x, int y) { this.x = x; this.y = y; }\n}\n\nPoint origin = new Point();\nPoint p = new Point(3, 4);" }
+    ],
+    "starterCode": "public class Main {\n    static class Book {\n        String title;\n        String author;\n        int year;\n        // Create two constructors:\n        // 1. Book(String title, String author)\n        // 2. Book(String title, String author, int year)\n        // Use this() chaining\n    }\n    public static void main(String[] args) {\n        // Create a Book using each constructor and print its fields\n    }\n}"
+  },
+  {
+    "id": "oop/creating-objects",
+    "title": "A Guide to Creating Objects in Java",
+    "body": "Objects in Java can be created in several ways:\n\n1. **`new` keyword** — most common: `Dog d = new Dog();`\n2. **Reflection** — `Class.forName(\"Dog\").getDeclaredConstructor().newInstance();`\n3. **`clone()`** — shallow copy of an existing object (implement `Cloneable`)\n4. **Deserialization** — reconstructing an object from a byte stream\n5. **Factory methods** — static methods like `LocalDate.of(2024, 1, 1)` return instances\n\nWhen `new` is used, the JVM:\n1. Allocates memory on the heap\n2. Calls the constructor\n3. Returns a reference to the object\n\nObject references are stored on the stack; the actual object data lives on the heap.",
+    "examples": [
+      { "label": "Creating objects with new and factory method", "code": "// Using new\nStringBuilder sb = new StringBuilder();\n\n// Using factory method\nimport java.time.LocalDate;\nLocalDate today = LocalDate.now();\nLocalDate birthday = LocalDate.of(1990, 6, 15);" }
+    ],
+    "starterCode": "public class Main {\n    static class Color {\n        int r, g, b;\n        Color(int r, int g, int b) { this.r = r; this.g = g; this.b = b; }\n        static Color red() { return new Color(255, 0, 0); }\n    }\n    public static void main(String[] args) {\n        // Create a Color using new and using the red() factory method\n        // Print the r, g, b values of each\n    }\n}"
+  },
+  {
+    "id": "oop/abstract-class",
+    "title": "Abstract Classes in Java",
+    "body": "An **abstract class** cannot be instantiated and may contain abstract methods — methods without a body that subclasses must implement.\n\n```java\npublic abstract class Animal {\n    abstract void speak();       // must be overridden\n    void breathe() { ... }      // concrete — inherited as-is\n}\n```\n\nUse an abstract class when:\n- You want to share code among related classes\n- Some behavior is common, some varies per subclass\n- You want to define a template (Template Method pattern)\n\n**Abstract vs Interface:**\n- Abstract class can have state (fields) and constructors\n- A class can extend only one abstract class\n- Interfaces support multiple inheritance",
+    "examples": [
+      { "label": "Abstract class with template method", "code": "public abstract class Vehicle {\n    abstract int maxSpeed();\n    void describe() {\n        System.out.println(\"Max speed: \" + maxSpeed() + \" km/h\");\n    }\n}\n\npublic class Car extends Vehicle {\n    public int maxSpeed() { return 200; }\n}" }
+    ],
+    "starterCode": "public class Main {\n    abstract static class Shape {\n        abstract double area();\n        void printArea() {\n            System.out.println(\"Area: \" + area());\n        }\n    }\n    // Create a concrete Triangle class that extends Shape\n    // Implement area() = 0.5 * base * height\n\n    public static void main(String[] args) {\n        // Instantiate Triangle and call printArea()\n    }\n}"
+  },
+  {
+    "id": "oop/interfaces",
+    "title": "Java Interfaces",
+    "body": "An **interface** defines a contract — a set of methods that implementing classes must provide. Interfaces support multiple inheritance: a class can implement many interfaces.\n\nSince Java 8, interfaces may have:\n- `default` methods — concrete methods with a body\n- `static` methods — utility methods on the interface itself\n\nSince Java 9: `private` methods in interfaces for code reuse within default methods.\n\n```java\ninterface Drawable {\n    void draw();                          // abstract\n    default void print() { draw(); }      // default\n    static Drawable noop() { return () -> {}; }\n}\n```\n\nChoose an interface over an abstract class when you need to define a role that unrelated classes can adopt.",
+    "examples": [
+      { "label": "Interface with default method", "code": "interface Printable {\n    String content();\n    default void print() {\n        System.out.println(content());\n    }\n}\n\nclass Report implements Printable {\n    public String content() { return \"Quarterly report\"; }\n}\nnew Report().print();" }
+    ],
+    "starterCode": "public class Main {\n    interface Resizable {\n        void resize(double factor);\n        default void doubleSize() { resize(2.0); }\n    }\n\n    static class Box implements Resizable {\n        double size = 1.0;\n        // Implement resize() to multiply size by factor\n        public void resize(double factor) { }\n    }\n\n    public static void main(String[] args) {\n        Box b = new Box();\n        b.doubleSize();\n        System.out.println(b.size); // Should print 2.0\n    }\n}"
+  },
+  {
+    "id": "oop/inheritance",
+    "title": "Guide to Inheritance in Java",
+    "body": "**Inheritance** lets a subclass acquire the fields and methods of its superclass using the `extends` keyword. Java supports single inheritance for classes.\n\nThe subclass:\n- Inherits all non-private members of the parent\n- Can add new fields and methods\n- Can override parent methods with `@Override`\n- Can call parent methods via `super.method()`\n\nConstructor chaining: the first line of a subclass constructor implicitly calls `super()` unless you explicitly call `super(args)`. Always call `super(...)` explicitly when the parent has no no-arg constructor.\n\nInheritance models an \"is-a\" relationship: a `Dog` *is-a* `Animal`.",
+    "examples": [
+      { "label": "Basic inheritance", "code": "class Animal {\n    String name;\n    void eat() { System.out.println(name + \" is eating\"); }\n}\n\nclass Dog extends Animal {\n    void bark() { System.out.println(\"Woof!\"); }\n}\n\nDog d = new Dog();\nd.name = \"Rex\";\nd.eat();\nd.bark();" }
+    ],
+    "starterCode": "public class Main {\n    static class Employee {\n        String name;\n        double salary;\n        Employee(String name, double salary) {\n            this.name = name; this.salary = salary;\n        }\n        double annualSalary() { return salary * 12; }\n    }\n\n    // Create a Manager class that extends Employee\n    // Add a bonus field and override annualSalary() to include bonus\n\n    public static void main(String[] args) {\n        // Create a Manager and print their annual salary with bonus\n    }\n}"
+  },
+  {
+    "id": "oop/inheritance-composition",
+    "title": "Inheritance and Composition (Is-a vs Has-a) in Java",
+    "body": "**Inheritance** models an *is-a* relationship: a `Cat` is an `Animal`. Use it when the subclass truly specializes the parent.\n\n**Composition** models a *has-a* relationship: a `Car` has an `Engine`. The class holds a reference to another class rather than extending it.\n\n**Prefer composition over inheritance** because:\n- Composition is more flexible — you can swap the component at runtime\n- Inheritance creates tight coupling — changes to the parent break subclasses\n- Deep inheritance hierarchies are hard to understand\n\nUse inheritance when:\n- The relationship is genuinely \"is-a\"\n- You need polymorphism through a common base type\n- The hierarchy is shallow (1-2 levels)",
+    "examples": [
+      { "label": "Composition vs inheritance", "code": "// Composition (preferred)\nclass Engine {\n    void start() { System.out.println(\"Engine started\"); }\n}\nclass Car {\n    private Engine engine = new Engine();\n    void start() { engine.start(); }\n}\n\n// Inheritance\nclass ElectricCar extends Car {\n    void charge() { System.out.println(\"Charging...\"); }\n}" }
+    ],
+    "starterCode": "public class Main {\n    // Use COMPOSITION to model a Computer that has a Processor and Memory\n    static class Processor {\n        int cores;\n        Processor(int cores) { this.cores = cores; }\n    }\n    static class Memory {\n        int gb;\n        Memory(int gb) { this.gb = gb; }\n    }\n    static class Computer {\n        // Add Processor and Memory fields\n        // Add a describe() method that prints cores and gb\n    }\n    public static void main(String[] args) {\n        Computer pc = new Computer(new Processor(8), new Memory(16));\n        // pc.describe();\n    }\n}"
+  },
+  {
+    "id": "oop/overload-override",
+    "title": "Method Overloading and Overriding in Java",
+    "body": "**Overloading** — same method name, different parameter list, resolved at **compile time**:\n```java\nvoid print(int n) { ... }\nvoid print(String s) { ... }\n```\n\n**Overriding** — subclass redefines a parent method with the same signature, resolved at **runtime** (dynamic dispatch):\n```java\n@Override\nvoid speak() { System.out.println(\"Woof!\"); }\n```\n\nRules for overriding:\n- Same method name and parameter types\n- Return type must be the same or a covariant subtype\n- Cannot reduce visibility (`public` method cannot become `protected`)\n- Use `@Override` to catch mistakes at compile time",
+    "examples": [
+      { "label": "Overloading and overriding", "code": "class Printer {\n    void print(int n) { System.out.println(\"int: \" + n); }\n    void print(String s) { System.out.println(\"str: \" + s); }\n}\n\nclass ColorPrinter extends Printer {\n    @Override\n    void print(String s) { System.out.println(\"[COLOR] \" + s); }\n}" }
+    ],
+    "starterCode": "public class Main {\n    static class Calculator {\n        // Overload add() for: int+int, double+double, int+int+int\n        int add(int a, int b) { return a + b; }\n    }\n    public static void main(String[] args) {\n        Calculator calc = new Calculator();\n        System.out.println(calc.add(1, 2));\n        // Call the other overloaded versions\n    }\n}"
+  },
+  {
+    "id": "oop/composition-aggregation",
+    "title": "Composition, Aggregation, and Association in Java",
+    "body": "These three terms describe how objects relate to each other:\n\n**Association** — objects know about each other but exist independently. A `Teacher` teaches `Students`, but both can exist separately.\n\n**Aggregation** (weak has-a) — one object contains another, but the contained object can exist independently. A `Department` has `Employees`, but employees exist outside the department.\n\n**Composition** (strong has-a) — the contained object's lifetime is tied to the container. A `House` has `Rooms`; destroying the house destroys the rooms.\n\nIn code, all three look like field references. The distinction is semantic — it matters for design and documentation, not syntax.",
+    "examples": [
+      { "label": "Composition vs aggregation", "code": "// Composition: Room cannot exist without House\nclass House {\n    private final Room room = new Room(); // House creates & owns Room\n}\n\n// Aggregation: Department references existing Employee\nclass Department {\n    private Employee manager; // Employee exists independently\n    Department(Employee mgr) { this.manager = mgr; }\n}" }
+    ],
+    "starterCode": "public class Main {\n    static class Engine {}\n    static class Wheel {}\n    // Model a Car using composition (Engine) and aggregation (Driver)\n    static class Driver {}\n    static class Car {\n        // Car owns Engine (composition)\n        // Car references Driver (aggregation - driver passed in)\n    }\n    public static void main(String[] args) {\n        Driver driver = new Driver();\n        Car car = new Car(driver);\n        System.out.println(\"Car created\");\n    }\n}"
+  },
+  {
+    "id": "oop/this-keyword",
+    "title": "Guide to the this Keyword in Java",
+    "body": "The `this` keyword refers to the current object — the instance on which a method or constructor is being called.\n\nCommon uses:\n\n1. **Disambiguate fields from parameters:**\n```java\nthis.name = name;\n```\n\n2. **Call another constructor in the same class:**\n```java\nthis(0, 0); // must be first statement\n```\n\n3. **Pass the current object as an argument:**\n```java\nregister(this);\n```\n\n4. **Return the current object (fluent API / builder pattern):**\n```java\npublic Builder setName(String n) { this.name = n; return this; }\n```\n\n`this` cannot be used in `static` contexts because static methods have no associated instance.",
+    "examples": [
+      { "label": "Builder pattern with this", "code": "class Query {\n    String table;\n    int limit = 10;\n    Query from(String t) { this.table = t; return this; }\n    Query limit(int n) { this.limit = n; return this; }\n}\nnew Query().from(\"users\").limit(5);" }
+    ],
+    "starterCode": "public class Main {\n    static class Person {\n        String name;\n        int age;\n        Person(String name, int age) {\n            // Use this to assign fields\n        }\n        Person withAge(int age) {\n            // Return a new Person with updated age using this\n            return null;\n        }\n    }\n    public static void main(String[] args) {\n        Person p = new Person(\"Alice\", 30);\n        System.out.println(p.name + \" \" + p.age);\n    }\n}"
+  },
+  {
+    "id": "oop/super-keyword",
+    "title": "Guide to the super Keyword in Java",
+    "body": "The `super` keyword refers to the parent class. It has two main uses:\n\n1. **Call a parent constructor:** `super(args)` must be the first statement in a constructor. Used to initialize fields defined in the parent.\n\n2. **Call an overridden parent method:** `super.method()` explicitly invokes the parent's version rather than the overridden one.\n\n```java\nclass Animal { void speak() { System.out.println(\"...\"); } }\nclass Dog extends Animal {\n    void speak() {\n        super.speak(); // Animal's version\n        System.out.println(\"Woof!\");\n    }\n}\n```\n\n`super` cannot be used in `static` methods. It is especially important in constructors to ensure proper initialization of parent state before child state.",
+    "examples": [
+      { "label": "super constructor and method", "code": "class Vehicle {\n    String brand;\n    Vehicle(String brand) { this.brand = brand; }\n    void describe() { System.out.println(\"Brand: \" + brand); }\n}\nclass Truck extends Vehicle {\n    int payload;\n    Truck(String brand, int payload) {\n        super(brand);\n        this.payload = payload;\n    }\n    void describe() {\n        super.describe();\n        System.out.println(\"Payload: \" + payload);\n    }\n}" }
+    ],
+    "starterCode": "public class Main {\n    static class Shape {\n        String color;\n        Shape(String color) { this.color = color; }\n        void draw() { System.out.println(\"Drawing \" + color + \" shape\"); }\n    }\n    static class Circle extends Shape {\n        double radius;\n        // Write constructor that calls super and sets radius\n        // Override draw() to call super.draw() then print radius\n    }\n    public static void main(String[] args) {\n        Circle c = new Circle(\"red\", 5.0);\n        c.draw();\n    }\n}"
+  },
+  {
+    "id": "oop/static-keyword",
+    "title": "A Guide to the Static Keyword in Java",
+    "body": "The `static` keyword makes a member belong to the **class** rather than any instance.\n\n**Static fields** — shared across all instances:\n```java\nstatic int instanceCount = 0;\n```\n\n**Static methods** — callable without an instance:\n```java\nMath.abs(-5);\n```\n\n**Static blocks** — run once when the class is loaded:\n```java\nstatic { System.out.println(\"Class loaded\"); }\n```\n\n**Static nested classes** — can be instantiated without an outer class instance.\n\nLimitations of static:\n- Cannot access instance fields/methods directly\n- Cannot use `this` or `super`\n- Harder to mock/test (prefer instance methods for business logic)",
+    "examples": [
+      { "label": "Static counter", "code": "class Counter {\n    private static int count = 0;\n    Counter() { count++; }\n    static int getCount() { return count; }\n}\nnew Counter(); new Counter();\nSystem.out.println(Counter.getCount()); // 2" }
+    ],
+    "starterCode": "public class Main {\n    static class MathUtils {\n        // Add a static method: clamp(int value, int min, int max)\n        // Returns value clamped between min and max\n    }\n    public static void main(String[] args) {\n        System.out.println(MathUtils.clamp(15, 0, 10)); // 10\n        System.out.println(MathUtils.clamp(-5, 0, 10)); // 0\n        System.out.println(MathUtils.clamp(5, 0, 10));  // 5\n    }\n}"
+  },
+  {
+    "id": "oop/final-keyword",
+    "title": "The final Keyword in Java",
+    "body": "The `final` keyword has three uses in Java:\n\n1. **Final variable** — can be assigned only once (effectively a constant):\n```java\nfinal int MAX = 100;\n```\n\n2. **Final method** — cannot be overridden by subclasses:\n```java\npublic final void template() { ... }\n```\n\n3. **Final class** — cannot be subclassed:\n```java\npublic final class String { ... }\n```\n\n`String`, `Integer`, and other wrapper classes are `final` for security and immutability guarantees.\n\nUsing `final` communicates intent, enables compiler optimizations, and prevents accidental modification or extension. In combination with `private` fields and no setters, `final` fields are the key ingredient in immutable classes.",
+    "examples": [
+      { "label": "final field and class", "code": "public final class Pi {\n    public static final double VALUE = 3.14159265358979;\n    private Pi() {} // prevent instantiation\n}\nSystem.out.println(Pi.VALUE);" }
+    ],
+    "starterCode": "public class Main {\n    // Create a final class Celsius with a final double value field\n    // Add a toFahrenheit() method: (value * 9/5) + 32\n    static final class Celsius {\n        final double value;\n        Celsius(double v) { this.value = v; }\n        // implement toFahrenheit()\n    }\n    public static void main(String[] args) {\n        Celsius boiling = new Celsius(100);\n        System.out.println(boiling.toFahrenheit()); // 212.0\n    }\n}"
+  },
+  {
+    "id": "oop/record-keyword",
+    "title": "Java Record Keyword",
+    "body": "Introduced in Java 16, a **record** is a concise syntax for immutable data-holder classes. The compiler auto-generates:\n- Private final fields\n- A canonical constructor\n- `equals()`, `hashCode()`, `toString()`\n- Public accessor methods (field name, no `get` prefix)\n\n```java\nrecord Point(int x, int y) {}\nPoint p = new Point(3, 4);\nSystem.out.println(p.x()); // 3\n```\n\nRecords can have:\n- Custom constructors (compact or explicit)\n- Instance methods\n- Static fields and methods\n\nRecords cannot extend other classes (they implicitly extend `java.lang.Record`) and cannot be mutable.",
+    "examples": [
+      { "label": "Record with validation", "code": "record Temperature(double celsius) {\n    Temperature {\n        if (celsius < -273.15) throw new IllegalArgumentException(\"Below absolute zero\");\n    }\n    double toFahrenheit() { return celsius * 9 / 5 + 32; }\n}\nvar t = new Temperature(100);\nSystem.out.println(t.toFahrenheit());" }
+    ],
+    "starterCode": "public class Main {\n    // Define a record Person with fields: name (String) and age (int)\n    // Add a compact constructor that validates age >= 0\n    // Add an isAdult() method\n\n    public static void main(String[] args) {\n        // Create a Person record and print name, age, and isAdult()\n    }\n}"
+  },
+  {
+    "id": "oop/enums",
+    "title": "A Guide to Java Enums",
+    "body": "An **enum** (enumeration) defines a fixed set of named constants. Enums in Java are full classes — they can have fields, constructors, and methods.\n\n```java\nenum Day { MON, TUE, WED, THU, FRI, SAT, SUN }\n```\n\nEnums are type-safe alternatives to integer constants. Useful features:\n- `values()` — returns an array of all constants\n- `ordinal()` — zero-based position\n- `name()` — constant name as a String\n- `Enum.valueOf(String)` — parse from string\n\nEnums can implement interfaces, enabling polymorphic behavior per constant via abstract methods. Enums are implicitly `public static final` and cannot be instantiated with `new`.",
+    "examples": [
+      { "label": "Enum with fields and methods", "code": "enum Planet {\n    MERCURY(3.303e+23, 2.4397e6),\n    EARTH(5.976e+24, 6.37814e6);\n\n    final double mass, radius;\n    Planet(double m, double r) { mass = m; radius = r; }\n    double gravity() { return 6.67300E-11 * mass / (radius * radius); }\n}\nSystem.out.println(Planet.EARTH.gravity());" }
+    ],
+    "starterCode": "public class Main {\n    enum Season { SPRING, SUMMER, AUTUMN, WINTER }\n\n    public static void main(String[] args) {\n        // Print all seasons using values()\n        // Use a switch expression to print a description of each season\n        Season s = Season.SUMMER;\n        String desc = switch (s) {\n            case SUMMER -> \"Hot and sunny\";\n            // Add other cases\n            default -> \"Unknown\";\n        };\n        System.out.println(desc);\n    }\n}"
+  },
+  {
+    "id": "oop/optional",
+    "title": "Guide To Java Optional",
+    "body": "`Optional<T>` is a container that may or may not hold a non-null value. It was introduced in Java 8 to reduce `NullPointerException` bugs by making the absence of a value explicit.\n\nCreating an `Optional`:\n```java\nOptional.of(value)        // throws if null\nOptional.ofNullable(val)  // wraps null as empty\nOptional.empty()          // empty Optional\n```\n\nUsing an `Optional`:\n- `isPresent()` / `isEmpty()` — check\n- `get()` — retrieve (throws if empty)\n- `orElse(default)` — safe retrieval\n- `orElseGet(supplier)` — lazy default\n- `ifPresent(consumer)` — act if present\n- `map()` / `flatMap()` / `filter()` — transform\n\nBest practice: use `Optional` as a return type, not as a field or parameter.",
+    "examples": [
+      { "label": "Optional usage", "code": "Optional<String> name = Optional.ofNullable(getUserName());\nString display = name\n    .filter(n -> !n.isEmpty())\n    .map(String::toUpperCase)\n    .orElse(\"Anonymous\");\nSystem.out.println(display);" }
+    ],
+    "starterCode": "public class Main {\n    static Optional<String> findUser(int id) {\n        if (id == 1) return Optional.of(\"Alice\");\n        return Optional.empty();\n    }\n    public static void main(String[] args) {\n        // Call findUser(1) and findUser(99)\n        // Use orElse() to print the name or \"Not found\"\n    }\n}"
+  },
+  {
+    "id": "oop/comparing-objects",
+    "title": "Comparing Objects in Java",
+    "body": "Java has two ways to compare objects:\n\n**`==`** — compares **references** (memory addresses). Two references are `==` only if they point to the exact same object.\n\n**`equals()`** — compares **logical equality** as defined by the class. `String.equals()` compares character content.\n\nThe default `equals()` inherited from `Object` uses `==`. Override it to define meaningful equality.\n\nFor ordering, implement `Comparable<T>` with `compareTo()`, or use external `Comparator<T>` objects.\n\nKey rule: if you override `equals()`, you must also override `hashCode()` to maintain the contract that equal objects have equal hash codes.",
+    "examples": [
+      { "label": "equals vs ==", "code": "String a = new String(\"hello\");\nString b = new String(\"hello\");\nSystem.out.println(a == b);       // false (different objects)\nSystem.out.println(a.equals(b)); // true (same content)" }
+    ],
+    "starterCode": "public class Main {\n    static class Box {\n        int size;\n        Box(int size) { this.size = size; }\n        // Override equals() and hashCode() based on size\n    }\n    public static void main(String[] args) {\n        Box b1 = new Box(10);\n        Box b2 = new Box(10);\n        System.out.println(b1 == b2);      // false\n        System.out.println(b1.equals(b2)); // true after override\n    }\n}"
+  },
+  {
+    "id": "oop/equals-hashcode",
+    "title": "Java equals() and hashCode() Contracts",
+    "body": "The **equals-hashCode contract** requires that:\n- If `a.equals(b)` is `true`, then `a.hashCode() == b.hashCode()`\n- If `a.hashCode() != b.hashCode()`, then `a.equals(b)` must be `false`\n- The reverse is not required: equal hash codes do not imply equality (collision)\n\n`equals()` must be: reflexive, symmetric, transitive, consistent, and return `false` for `null`.\n\nViolating the contract breaks `HashMap`, `HashSet`, and any hash-based collection — objects stored with one hash code cannot be found if the code changes.\n\nBest practice: generate `equals()` and `hashCode()` using `Objects.equals()` and `Objects.hash()` or use IDE generation / Lombok `@EqualsAndHashCode`.",
+    "examples": [
+      { "label": "Correct equals and hashCode", "code": "import java.util.Objects;\nclass Point {\n    int x, y;\n    Point(int x, int y) { this.x = x; this.y = y; }\n    public boolean equals(Object o) {\n        if (!(o instanceof Point p)) return false;\n        return x == p.x && y == p.y;\n    }\n    public int hashCode() { return Objects.hash(x, y); }\n}" }
+    ],
+    "starterCode": "import java.util.*;\npublic class Main {\n    static class Student {\n        String id;\n        Student(String id) { this.id = id; }\n        // Implement equals() and hashCode() based on id\n    }\n    public static void main(String[] args) {\n        Set<Student> set = new HashSet<>();\n        set.add(new Student(\"S001\"));\n        set.add(new Student(\"S001\")); // duplicate\n        System.out.println(set.size()); // Should print 1 after fix\n    }\n}"
+  },
+  {
+    "id": "oop/functional-interfaces",
+    "title": "Functional Interfaces in Java",
+    "body": "A **functional interface** has exactly one abstract method and can be represented as a lambda expression. The `@FunctionalInterface` annotation enforces this at compile time.\n\nBuilt-in functional interfaces in `java.util.function`:\n\n| Interface | Signature | Use |\n|-----------|-----------|-----|\n| `Supplier<T>` | `T get()` | produce a value |\n| `Consumer<T>` | `void accept(T)` | consume a value |\n| `Function<T,R>` | `R apply(T)` | transform |\n| `Predicate<T>` | `boolean test(T)` | filter/test |\n| `BiFunction<T,U,R>` | `R apply(T,U)` | two-arg transform |\n\nFunctional interfaces enable lambdas and method references throughout the Java API.",
+    "examples": [
+      { "label": "Lambda as functional interface", "code": "import java.util.function.*;\n\nPredicate<String> isLong = s -> s.length() > 5;\nFunction<String, Integer> length = String::length;\nConsumer<String> print = System.out::println;\n\nprint.accept(isLong.test(\"Hello\") ? \"long\" : \"short\");" }
+    ],
+    "starterCode": "import java.util.function.*;\npublic class Main {\n    public static void main(String[] args) {\n        // Create a Predicate that checks if a number is even\n        // Create a Function that squares an integer\n        // Create a Consumer that prints \"Value: \" + the value\n        // Chain them: filter even numbers, square them, print\n        int[] nums = {1, 2, 3, 4, 5};\n        for (int n : nums) {\n            // apply predicate, function, consumer\n        }\n    }\n}"
+  },
+  {
+    "id": "oop/compact-source",
+    "title": "Compact Source Files and Instance Main Methods in Java",
+    "body": "Java 21 (preview) and later allow **unnamed classes** and **instance main methods** — simplifying beginner programs by removing the class and `static` boilerplate.\n\nTraditional:\n```java\npublic class Hello {\n    public static void main(String[] args) { System.out.println(\"Hi\"); }\n}\n```\n\nCompact (Java 21+ preview):\n```java\nvoid main() {\n    System.out.println(\"Hi\");\n}\n```\n\nThis feature targets learners and scripting use cases. The launcher automatically wraps the file in an unnamed class. `System.out` can be replaced with the shorthand `println()` when `java.io.IO` is imported (Java 23+).\n\nFor production code, continue using named classes with `public static void main`.",
+    "examples": [
+      { "label": "Instance main method (Java 21+ preview)", "code": "// Compile with: javac --enable-preview --release 21 Hello.java\nvoid main() {\n    System.out.println(\"Hello from instance main!\");\n}" }
+    ],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Traditional entry point — try rewriting this as a compact main\n        // if your JDK supports it (21+ with --enable-preview)\n        System.out.println(\"Hello, Java!\");\n    }\n}"
+  },
+  {
+    "id": "oop/callbacks",
+    "title": "Callback Functions in Java",
+    "body": "A **callback** is a piece of code passed as an argument to be executed later — often after some asynchronous operation or event.\n\nIn Java, callbacks are implemented via:\n1. **Functional interfaces / lambdas** — most modern approach\n2. **Anonymous inner classes** — older style\n3. **Interface implementations** — for complex callbacks\n\n```java\ninterface OnComplete { void done(String result); }\n\nvoid fetchData(OnComplete callback) {\n    String data = \"result\";\n    callback.done(data);\n}\n\nfetchData(result -> System.out.println(\"Got: \" + result));\n```\n\nCallbacks are the foundation of event listeners, `CompletableFuture` handlers, and reactive programming in Java.",
+    "examples": [
+      { "label": "Callback with lambda", "code": "import java.util.function.Consumer;\n\nstatic void process(int value, Consumer<Integer> onDone) {\n    int result = value * 2;\n    onDone.accept(result);\n}\n\nprocess(5, result -> System.out.println(\"Result: \" + result));" }
+    ],
+    "starterCode": "import java.util.function.*;\npublic class Main {\n    static void downloadFile(String url, Consumer<String> onSuccess, Runnable onError) {\n        if (url.startsWith(\"https\")) {\n            onSuccess.accept(\"File from \" + url);\n        } else {\n            onError.run();\n        }\n    }\n    public static void main(String[] args) {\n        // Call downloadFile with a valid URL and print the result\n        // Call it with an invalid URL and print an error message\n    }\n}"
+  },
+  {
+    "id": "oop/switch-pattern",
+    "title": "Pattern Matching for Switch",
+    "body": "Java 21 finalized **pattern matching for switch**, allowing switch cases to match on type patterns and deconstruct objects.\n\n```java\nObject obj = 42;\nString result = switch (obj) {\n    case Integer i -> \"int: \" + i;\n    case String s  -> \"str: \" + s;\n    case null      -> \"null\";\n    default        -> \"other\";\n};\n```\n\nGuarded patterns add conditions with `when`:\n```java\ncase Integer i when i > 0 -> \"positive int\";\n```\n\nThis eliminates boilerplate chains of `instanceof` checks and casts, making code more readable and exhaustive (the compiler can verify all cases are handled for sealed types).",
+    "examples": [
+      { "label": "Pattern matching switch", "code": "sealed interface Shape permits Circle, Rectangle {}\nrecord Circle(double r) implements Shape {}\nrecord Rectangle(double w, double h) implements Shape {}\n\nString describe(Shape s) {\n    return switch (s) {\n        case Circle c       -> \"Circle r=\" + c.r();\n        case Rectangle r    -> \"Rect \" + r.w() + \"x\" + r.h();\n    };\n}" }
+    ],
+    "starterCode": "public class Main {\n    static String format(Object obj) {\n        // Use pattern matching switch to handle:\n        // Integer: return \"Number: \" + value\n        // String: return \"Text: \" + value.toUpperCase()\n        // null: return \"Nothing\"\n        // default: return \"Unknown\"\n        return switch (obj) {\n            default -> \"Unknown\";\n        };\n    }\n    public static void main(String[] args) {\n        System.out.println(format(42));\n        System.out.println(format(\"hello\"));\n        System.out.println(format(null));\n    }\n}"
+  },
+  {
+    "id": "oop/sealed-classes",
+    "title": "Sealed Classes and Interfaces in Java",
+    "body": "**Sealed classes** (Java 17) restrict which classes can extend or implement them, giving you a closed, exhaustive type hierarchy.\n\n```java\npublic sealed interface Result<T>\n    permits Success, Failure {}\n\nrecord Success<T>(T value) implements Result<T> {}\nrecord Failure<T>(String error) implements Result<T> {}\n```\n\nPermitted subclasses must be in the same package (or module) and must be `final`, `sealed`, or `non-sealed`.\n\nBenefits:\n- Compiler-verified exhaustive switch\n- Documents the intended hierarchy\n- Replaces fragile `instanceof` chains\n- Enables algebraic data types (sum types) in Java",
+    "examples": [
+      { "label": "Sealed hierarchy with switch", "code": "sealed interface Shape permits Circle, Rect {}\nrecord Circle(double r) implements Shape {}\nrecord Rect(double w, double h) implements Shape {}\n\ndouble area(Shape s) {\n    return switch (s) {\n        case Circle c -> Math.PI * c.r() * c.r();\n        case Rect r   -> r.w() * r.h();\n    };\n}" }
+    ],
+    "starterCode": "public class Main {\n    sealed interface Expr permits Num, Add {}\n    record Num(int value) implements Expr {}\n    record Add(Expr left, Expr right) implements Expr {}\n\n    static int eval(Expr e) {\n        // Use switch pattern matching to evaluate the expression\n        return switch (e) {\n            case Num n -> n.value();\n            case Add a -> eval(a.left()) + eval(a.right());\n        };\n    }\n    public static void main(String[] args) {\n        Expr expr = new Add(new Num(3), new Num(4));\n        System.out.println(eval(expr)); // 7\n    }\n}"
+  },
+  {
+    "id": "oop/functional-prog",
+    "title": "Functional Programming in Java",
+    "body": "Functional programming (FP) treats computation as the evaluation of pure functions and avoids shared mutable state.\n\nJava supports FP through:\n- **Lambda expressions** — anonymous functions\n- **Method references** — `String::toUpperCase`\n- **Functional interfaces** — `Function`, `Predicate`, `Supplier`, `Consumer`\n- **Streams** — declarative data pipelines\n- **Immutable data** — records, `Collections.unmodifiableList()`\n\n**Core FP principles in Java:**\n- **Pure functions** — no side effects, same output for same input\n- **Higher-order functions** — methods that accept or return functions\n- **Function composition** — `f.andThen(g)`, `f.compose(g)`\n- **Immutability** — prefer `final` and records",
+    "examples": [
+      { "label": "Function composition", "code": "import java.util.function.Function;\n\nFunction<String, String> trim = String::trim;\nFunction<String, String> upper = String::toUpperCase;\nFunction<String, String> clean = trim.andThen(upper);\n\nSystem.out.println(clean.apply(\"  hello  \")); // HELLO" }
+    ],
+    "starterCode": "import java.util.function.*;\nimport java.util.*;\nimport java.util.stream.*;\npublic class Main {\n    public static void main(String[] args) {\n        List<String> words = List.of(\"  hello  \", \"world\", \"  java  \");\n        // Use streams and lambdas to: trim, uppercase, filter length > 4, collect to list\n        // Print each result\n    }\n}"
+  },
+  {
+    "id": "oop/transient",
+    "title": "The transient Keyword in Java",
+    "body": "The `transient` keyword marks a field that should be **excluded from serialization**. When an object is serialized (converted to a byte stream), transient fields are not included and are set to their default values upon deserialization.\n\n```java\nclass User implements Serializable {\n    String username;\n    transient String password; // never serialized\n}\n```\n\nCommon uses for `transient`:\n- Sensitive data (passwords, credit card numbers)\n- Derived/computed fields that can be recalculated\n- Non-serializable fields (sockets, threads, streams)\n- Cached values\n\nAlternatively, override `writeObject()` and `readObject()` for custom serialization logic.",
+    "examples": [
+      { "label": "transient field", "code": "import java.io.*;\nclass Config implements Serializable {\n    String host = \"localhost\";\n    transient int port = 8080; // excluded\n    transient DatabaseConnection conn; // not serializable\n}" }
+    ],
+    "starterCode": "import java.io.*;\npublic class Main {\n    static class Session implements Serializable {\n        String userId;\n        transient String authToken; // should not persist\n        Session(String userId, String token) {\n            this.userId = userId;\n            this.authToken = token;\n        }\n    }\n    public static void main(String[] args) throws Exception {\n        Session s = new Session(\"user123\", \"secret-token\");\n        // Serialize and deserialize s, then print userId and authToken\n        // authToken should be null after deserialization\n        System.out.println(\"User: \" + s.userId);\n        System.out.println(\"Token: \" + s.authToken);\n    }\n}"
+  },
+  {
+    "id": "oop/instanceof",
+    "title": "Java instanceof Operator",
+    "body": "The `instanceof` operator tests whether an object is an instance of a given type, returning `boolean`.\n\nJava 16 added **pattern matching for instanceof** — it tests and casts in a single expression:\n\n```java\n// Old style\nif (obj instanceof String) {\n    String s = (String) obj;\n    System.out.println(s.length());\n}\n\n// Pattern matching (Java 16+)\nif (obj instanceof String s) {\n    System.out.println(s.length());\n}\n```\n\nThe pattern variable `s` is in scope only where the pattern is guaranteed to match. `instanceof` returns `false` for `null`, so no null check is needed before using the pattern variable.",
+    "examples": [
+      { "label": "Pattern matching instanceof", "code": "Object obj = \"Hello, World!\";\nif (obj instanceof String s && s.length() > 5) {\n    System.out.println(s.toUpperCase());\n}" }
+    ],
+    "starterCode": "public class Main {\n    static void describe(Object obj) {\n        // Use pattern matching instanceof to:\n        // - If Integer: print \"Integer: \" + the value doubled\n        // - If String: print \"String of length \" + length\n        // - Otherwise: print \"Unknown type\"\n    }\n    public static void main(String[] args) {\n        describe(42);\n        describe(\"Java\");\n        describe(3.14);\n    }\n}"
+  },
+  {
+    "id": "oop/deep-copy",
+    "title": "How to Make a Deep Copy of an Object in Java",
+    "body": "A **shallow copy** copies an object's field values — but for reference fields, it copies the reference, not the referenced object. Changes to the nested object affect both copies.\n\nA **deep copy** recursively copies all nested objects, producing a fully independent clone.\n\nApproaches to deep copy in Java:\n1. **Manual constructor** — copy each field explicitly\n2. **`clone()` with `Cloneable`** — error-prone, deprecated by many\n3. **Serialization** — serialize and deserialize (slow)\n4. **Copy libraries** — Gson/Jackson round-trip, Apache Commons `SerializationUtils`\n\nRecords are immutable, so shallow copy is sufficient — this is one advantage of using records for data.",
+    "examples": [
+      { "label": "Manual deep copy", "code": "class Address {\n    String city;\n    Address(String city) { this.city = city; }\n    Address deepCopy() { return new Address(city); }\n}\nclass Person {\n    String name;\n    Address address;\n    Person deepCopy() { return new Person(name, address.deepCopy()); }\n}" }
+    ],
+    "starterCode": "public class Main {\n    static class Tag {\n        String value;\n        Tag(String v) { this.value = v; }\n    }\n    static class Article {\n        String title;\n        Tag[] tags;\n        Article(String title, Tag[] tags) { this.title = title; this.tags = tags; }\n        // Implement deepCopy() — copy the tags array and each Tag object\n        Article deepCopy() { return null; }\n    }\n    public static void main(String[] args) {\n        Article original = new Article(\"Java\", new Tag[]{new Tag(\"oop\")});\n        Article copy = original.deepCopy();\n        copy.tags[0].value = \"modified\";\n        System.out.println(original.tags[0].value); // Should still be \"oop\"\n    }\n}"
+  },
+  {
+    "id": "oop/type-casting",
+    "title": "Object Type Casting in Java",
+    "body": "**Type casting** converts an object reference from one type to another.\n\n**Upcasting** (implicit) — subclass to superclass. Always safe:\n```java\nAnimal a = new Dog(); // Dog → Animal\n```\n\n**Downcasting** (explicit) — superclass to subclass. May throw `ClassCastException`:\n```java\nDog d = (Dog) a; // may fail at runtime\n```\n\nAlways use `instanceof` before downcasting, or use pattern matching:\n```java\nif (a instanceof Dog d) { d.bark(); }\n```\n\nPrimitive casting follows different rules:\n- Widening (int → long → double) is implicit\n- Narrowing (double → int) is explicit and may lose data",
+    "examples": [
+      { "label": "Safe downcast with instanceof", "code": "Animal a = new Dog();\nif (a instanceof Dog d) {\n    d.bark(); // safe\n}\n// ClassCastException example:\n// Cat c = (Cat) a; // runtime error!" }
+    ],
+    "starterCode": "public class Main {\n    static class Animal { void breathe() { System.out.println(\"breathing\"); } }\n    static class Fish extends Animal { void swim() { System.out.println(\"swimming\"); } }\n    static class Bird extends Animal { void fly() { System.out.println(\"flying\"); } }\n\n    static void interact(Animal a) {\n        // Use instanceof pattern matching to call swim() or fly() as appropriate\n    }\n    public static void main(String[] args) {\n        interact(new Fish());\n        interact(new Bird());\n    }\n}"
+  },
+  {
+    "id": "oop/static-default-methods",
+    "title": "Static and Default Methods in Interfaces in Java",
+    "body": "Before Java 8, interfaces could only have abstract methods. Java 8 added:\n\n**Default methods** — provide a default implementation that implementing classes inherit or override:\n```java\ndefault void log(String msg) { System.out.println(msg); }\n```\n\n**Static methods** — utility methods on the interface, not inherited by implementing classes:\n```java\nstatic Validator of(Predicate<String> p) { return p::test; }\n```\n\nJava 9 added **private methods** in interfaces for code reuse within default methods.\n\nThese features allow interfaces to evolve without breaking existing implementations — crucial for the Java Collections API update in Java 8 (e.g., `List.forEach()`).",
+    "examples": [
+      { "label": "Interface with default and static methods", "code": "interface Logger {\n    void log(String msg);\n    default void warn(String msg) { log(\"[WARN] \" + msg); }\n    default void error(String msg) { log(\"[ERROR] \" + msg); }\n    static Logger console() { return msg -> System.out.println(msg); }\n}\n\nLogger l = Logger.console();\nl.warn(\"Low memory\");" }
+    ],
+    "starterCode": "public class Main {\n    interface Transformer<T> {\n        T transform(T input);\n        default Transformer<T> andThen(Transformer<T> next) {\n            // Chain: apply this transform, then next\n            return input -> next.transform(this.transform(input));\n        }\n        static <T> Transformer<T> identity() { return t -> t; }\n    }\n    public static void main(String[] args) {\n        Transformer<String> trim = String::trim;\n        Transformer<String> upper = String::toUpperCase;\n        Transformer<String> clean = trim.andThen(upper);\n        System.out.println(clean.transform(\"  hello world  \"));\n    }\n}"
+  },
+  {
+    "id": "oop/reflection",
+    "title": "Guide to Java Reflection",
+    "body": "**Reflection** allows a program to inspect and manipulate classes, methods, and fields at runtime — even private members — without knowing them at compile time.\n\nCore classes in `java.lang.reflect`:\n- `Class<?>` — represents a class or interface\n- `Method` — represents a method\n- `Field` — represents a field\n- `Constructor<?>` — represents a constructor\n\nCommon operations:\n```java\nClass<?> clazz = obj.getClass();\nMethod m = clazz.getMethod(\"methodName\", ParamType.class);\nm.invoke(obj, args);\n```\n\nUses: dependency injection frameworks (Spring), ORM (Hibernate), testing libraries, serialization. Reflection is powerful but slow and bypasses compile-time safety — use sparingly.",
+    "examples": [
+      { "label": "Inspect a class with reflection", "code": "Class<?> c = String.class;\nSystem.out.println(c.getName());\nfor (var method : c.getMethods()) {\n    System.out.println(method.getName());\n}" }
+    ],
+    "starterCode": "import java.lang.reflect.*;\npublic class Main {\n    static class Secret {\n        private String message = \"Hidden!\";\n    }\n    public static void main(String[] args) throws Exception {\n        Secret s = new Secret();\n        Field f = Secret.class.getDeclaredField(\"message\");\n        f.setAccessible(true);\n        // Read the private field value and print it\n        // Then set it to \"Revealed!\" and print again\n    }\n}"
+  }
+]

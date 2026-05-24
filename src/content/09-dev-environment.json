@@ -1,0 +1,38 @@
+[
+  {
+    "id": "devenv/jvm-jre-jdk",
+    "title": "Difference Between JVM, JRE, and JDK",
+    "body": "Understanding the Java platform stack is essential for every Java developer.\n\n**JVM (Java Virtual Machine)** — the runtime engine that executes Java bytecode. It is platform-specific (Windows JVM, Linux JVM, etc.) but bytecode is platform-neutral. The JVM handles memory management, garbage collection, and security sandboxing.\n\n**JRE (Java Runtime Environment)** — the JVM plus the standard class libraries needed to *run* Java applications. End users who only need to run Java programs install the JRE.\n\n**JDK (Java Development Kit)** — the JRE plus development tools: the `javac` compiler, `javadoc` documentation generator, `jar` archiver, `jshell` REPL, debugger, and more. Developers install the JDK.\n\nThe relationship is:\n```\nJDK ⊇ JRE ⊇ JVM\n```\n\nSince Java 11 the distinction between JRE and JDK is largely collapsed — Oracle no longer ships a separate JRE download. The `jlink` tool lets you build a custom minimal runtime image containing only the modules your application needs.",
+    "examples": [
+      {
+        "label": "Check your Java version",
+        "code": "// Run in a terminal:\n// java -version       (JVM/JRE version)\n// javac -version      (JDK compiler version)\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Java version: \" + System.getProperty(\"java.version\"));\n        System.out.println(\"JVM name: \"     + System.getProperty(\"java.vm.name\"));\n        System.out.println(\"JDK home: \"     + System.getProperty(\"java.home\"));\n    }\n}"
+      }
+    ],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Print the Java version, JVM vendor, and the java.home property\n        System.out.println(System.getProperty(\"java.version\"));\n        System.out.println(System.getProperty(\"java.vendor\"));\n        System.out.println(System.getProperty(\"java.home\"));\n    }\n}"
+  },
+  {
+    "id": "devenv/stack-heap",
+    "title": "Stack Memory and Heap Space in Java",
+    "body": "The JVM divides memory into two key regions: the **stack** and the **heap**.\n\n**Stack Memory** stores:\n- Method call frames (local variables, parameters, return addresses)\n- Primitive values declared inside methods\n- References (pointers) to heap objects\n\nEach thread has its own stack. When a method is called a new frame is pushed; when the method returns the frame is popped. Stack memory is fast but limited — deep recursion causes a `StackOverflowError`.\n\n**Heap Space** stores:\n- All objects created with `new`\n- Instance variables of those objects\n- Static variables (in a special method area)\n\nThe heap is shared across all threads and is managed by the **Garbage Collector (GC)**, which reclaims memory from objects that are no longer reachable. The heap is divided into **Young Generation** (Eden + Survivor spaces) and **Old Generation** to optimize GC performance.\n\nUnderstanding this split helps you diagnose `OutOfMemoryError`, tune JVM flags like `-Xms`, `-Xmx` (heap size) and `-Xss` (stack size), and write GC-friendly code.",
+    "examples": [
+      {
+        "label": "Stack vs Heap illustration",
+        "code": "public class StackHeap {\n    // 'value' lives on the heap as part of the object\n    private int value;\n\n    public static void main(String[] args) {\n        // 'x' is a local primitive — lives on the stack\n        int x = 10;\n\n        // 'obj' reference lives on the stack;\n        // the StackHeap object itself lives on the heap\n        StackHeap obj = new StackHeap();\n        obj.value = 42;\n\n        System.out.println(\"x = \" + x);\n        System.out.println(\"obj.value = \" + obj.value);\n    }\n}"
+      }
+    ],
+    "starterCode": "public class Main {\n    static int factorial(int n) {\n        // Practice: understand stack frames via recursion\n        if (n <= 1) return 1;\n        return n * factorial(n - 1);\n    }\n\n    public static void main(String[] args) {\n        // Each call to factorial() pushes a new frame onto the stack\n        System.out.println(factorial(5));\n        // Try a very large number to trigger StackOverflowError\n    }\n}"
+  },
+  {
+    "id": "devenv/classloaders",
+    "title": "Class Loaders in Java",
+    "body": "The **ClassLoader** subsystem is responsible for loading `.class` bytecode files into the JVM at runtime. Java uses a **delegation model**: each class loader first asks its parent before trying to load a class itself.\n\n**Built-in class loaders (Java 9+):**\n- **Bootstrap ClassLoader** — loads core Java classes (`java.lang.*`, `java.util.*`) from the JDK modules. It is written in native code and has no Java parent.\n- **Platform ClassLoader** (was Extension CL) — loads platform/extension classes.\n- **Application (System) ClassLoader** — loads classes from the application classpath (`-cp` / `CLASSPATH`).\n\n**Loading phases:**\n1. **Loading** — reads bytecode and creates a `Class` object\n2. **Linking** — verifies bytecode, prepares static fields, resolves symbolic references\n3. **Initialization** — runs static initializers and assigns static field values\n\nYou can write a custom `ClassLoader` by extending `java.lang.ClassLoader` and overriding `findClass()`. This enables hot-reloading, plugin systems, and loading classes from non-standard locations (database, network, encrypted jar).",
+    "examples": [
+      {
+        "label": "Inspecting class loaders",
+        "code": "public class ClassLoaderDemo {\n    public static void main(String[] args) {\n        // Application class loader\n        ClassLoader appCL = ClassLoaderDemo.class.getClassLoader();\n        System.out.println(\"App CL: \" + appCL);\n\n        // Platform class loader\n        System.out.println(\"Platform CL: \" + appCL.getParent());\n\n        // Bootstrap CL (returns null in Java)\n        System.out.println(\"Bootstrap CL: \" + appCL.getParent().getParent());\n\n        // Core class — loaded by Bootstrap CL\n        System.out.println(\"String CL: \" + String.class.getClassLoader());\n    }\n}"
+      }
+    ],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Print the class loader hierarchy for the Main class\n        ClassLoader cl = Main.class.getClassLoader();\n        while (cl != null) {\n            System.out.println(cl);\n            cl = cl.getParent();\n        }\n        System.out.println(\"Bootstrap (null): \" + cl);\n    }\n}"
+  }
+]

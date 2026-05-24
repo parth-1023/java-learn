@@ -1,0 +1,93 @@
+[
+  {
+    "id": "basics/syntax",
+    "title": "Introduction to Basic Syntax in Java",
+    "body": "Java programs are made up of **classes** containing **methods**. Every statement ends with a semicolon. Java is case-sensitive.\n\nA basic Java program has:\n- A `package` declaration (optional)\n- `import` statements\n- A `class` with the same name as the file\n- A `main` method as the entry point",
+    "examples": [{ "label": "Minimal Java program", "code": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Print your name\n        System.out.println(\"Hello, World!\");\n    }\n}"
+  },
+  {
+    "id": "basics/primitives",
+    "title": "Introduction to Java Primitives",
+    "body": "Java has 8 built-in primitive types that hold simple values directly (not as objects):\n\n| Type | Size | Example |\n|------|------|---------|\n| `byte` | 8-bit | `-128` to `127` |\n| `short` | 16-bit | `-32768` to `32767` |\n| `int` | 32-bit | `-2^31` to `2^31-1` |\n| `long` | 64-bit | append `L` suffix |\n| `float` | 32-bit decimal | append `f` suffix |\n| `double` | 64-bit decimal | default decimal type |\n| `char` | 16-bit Unicode | single quotes `'A'` |\n| `boolean` | 1-bit | `true` or `false` |",
+    "examples": [{ "label": "Declaring primitives", "code": "int age = 25;\ndouble price = 9.99;\nboolean isActive = true;\nchar grade = 'A';\nlong population = 8_000_000_000L;" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Declare an int, a double, and a boolean, then print them\n        int number = 42;\n        System.out.println(number);\n    }\n}"
+  },
+  {
+    "id": "basics/main-method",
+    "title": "Java main() Method Explained",
+    "body": "The `main` method is the entry point of every Java application. The JVM looks for this exact signature to start execution.\n\n```java\npublic static void main(String[] args)\n```\n\n- `public` — accessible by the JVM from outside the class\n- `static` — can be called without creating an instance\n- `void` — returns nothing\n- `String[] args` — command-line arguments passed as strings",
+    "examples": [{ "label": "Accessing command-line args", "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Arg count: \" + args.length);\n        for (String arg : args) {\n            System.out.println(arg);\n        }\n    }\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Print the number of arguments received\n        System.out.println(\"Args: \" + args.length);\n    }\n}"
+  },
+  {
+    "id": "basics/control-structures",
+    "title": "Control Structures in Java",
+    "body": "Java control structures direct the flow of execution.\n\n**if/else** — runs a block when a condition is true:\n```java\nif (score >= 90) { ... } else { ... }\n```\n\n**Ternary operator** — compact single-expression conditional:\n```java\nString result = score >= 60 ? \"Pass\" : \"Fail\";\n```\n\n**switch** — matches a value against multiple cases. Java 14+ supports arrow syntax.",
+    "examples": [{ "label": "if/else", "code": "int score = 75;\nif (score >= 90) {\n    System.out.println(\"A\");\n} else if (score >= 75) {\n    System.out.println(\"B\");\n} else {\n    System.out.println(\"C\");\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        int score = 85;\n        // Print the grade for this score using if/else\n    }\n}"
+  },
+  {
+    "id": "basics/loops",
+    "title": "A Guide to Java Loops",
+    "body": "Java has three loop types:\n\n**for** — use when the number of iterations is known:\n```java\nfor (int i = 0; i < 10; i++) { ... }\n```\n\n**while** — use when iterations depend on a condition:\n```java\nwhile (condition) { ... }\n```\n\n**do-while** — always executes the body at least once:\n```java\ndo { ... } while (condition);\n```\n\nUse `break` to exit a loop early and `continue` to skip to the next iteration.",
+    "examples": [{ "label": "for loop", "code": "for (int i = 0; i < 5; i++) {\n    System.out.println(i);\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Print numbers 1 to 10 using a for loop\n    }\n}"
+  },
+  {
+    "id": "basics/packages",
+    "title": "Guide to Java Packages",
+    "body": "Packages group related classes and prevent naming conflicts. The `package` statement must be the first line of a file. Use `import` to access classes from other packages.\n\n```java\npackage com.example.app;\nimport java.util.ArrayList;\n```\n\nJava's standard library is organized into packages:\n- `java.lang` — auto-imported (String, Math, System)\n- `java.util` — collections, utilities\n- `java.io` — file and stream I/O\n- `java.net` — networking",
+    "examples": [{ "label": "Package and import", "code": "package com.example.app;\nimport java.util.ArrayList;\n\npublic class App {\n    public static void main(String[] args) {\n        ArrayList<String> list = new ArrayList<>();\n    }\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Import and use java.util.Date to print the current date\n    }\n}"
+  },
+  {
+    "id": "basics/pass-by-value",
+    "title": "Pass-By-Value as a Parameter Passing Mechanism in Java",
+    "body": "Java is strictly **pass-by-value**. This means:\n\n- For **primitives**: a copy of the value is passed. Changes inside the method do not affect the caller.\n- For **objects**: a copy of the *reference* is passed. The method can mutate the object's state, but cannot make the caller's variable point elsewhere.\n\nThis is a common source of confusion — Java never passes objects by reference.",
+    "examples": [{ "label": "Primitive pass-by-value", "code": "static void increment(int n) { n++; }\npublic static void main(String[] args) {\n    int x = 5;\n    increment(x);\n    System.out.println(x); // still 5\n}" }],
+    "starterCode": "public class Main {\n    static void doubleIt(int n) {\n        n = n * 2;\n    }\n    public static void main(String[] args) {\n        int value = 10;\n        doubleIt(value);\n        System.out.println(value); // What prints?\n    }\n}"
+  },
+  {
+    "id": "basics/varargs",
+    "title": "Varargs in Java",
+    "body": "Varargs (`...`) lets a method accept a variable number of arguments of the same type. Internally, Java treats the arguments as an array.\n\n```java\npublic static int sum(int... numbers) { ... }\n```\n\nRules:\n- Only one varargs parameter per method\n- Must be the last parameter\n- Can be called with zero or more arguments\n- Can also be called with an explicit array",
+    "examples": [{ "label": "Varargs method", "code": "public static int sum(int... numbers) {\n    int total = 0;\n    for (int n : numbers) total += n;\n    return total;\n}\nSystem.out.println(sum(1, 2, 3, 4)); // 10" }],
+    "starterCode": "public class Main {\n    static String join(String... words) {\n        // Join all words with a space and return the result\n        return \"\";\n    }\n    public static void main(String[] args) {\n        System.out.println(join(\"Hello\", \"World\"));\n    }\n}"
+  },
+  {
+    "id": "basics/hashcode",
+    "title": "Guide to hashCode() in Java",
+    "body": "`hashCode()` returns an integer used to bucket objects in hash-based collections like `HashMap` and `HashSet`.\n\n**The contract:**\n- Objects that are `equals()` must return the same `hashCode()`\n- Objects with the same `hashCode()` do *not* have to be `equals()` (hash collision)\n\nThe default `hashCode()` is based on memory address. Override it whenever you override `equals()`. IDEs and `Objects.hash()` can generate it for you.",
+    "examples": [{ "label": "Default hashCode", "code": "String s1 = \"hello\";\nString s2 = \"hello\";\nSystem.out.println(s1.hashCode() == s2.hashCode()); // true" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        String a = \"Java\";\n        String b = \"Java\";\n        System.out.println(a.hashCode());\n        System.out.println(b.hashCode());\n        System.out.println(a.hashCode() == b.hashCode());\n    }\n}"
+  },
+  {
+    "id": "basics/switch",
+    "title": "Java Switch Statement",
+    "body": "The `switch` statement selects one of many code blocks based on a value. Java 14+ introduced switch *expressions* with arrow (`->`) syntax that return a value.\n\n**Classic switch** uses `case:`, `break`, and `default:`.\n\n**Switch expression** (Java 14+):\n```java\nString day = switch (n) {\n    case 1 -> \"Monday\";\n    case 2 -> \"Tuesday\";\n    default -> \"Other\";\n};\n```\n\nSwitch expressions eliminate fall-through bugs and can be used directly in assignments.",
+    "examples": [{ "label": "Switch expression (Java 14+)", "code": "int day = 3;\nString name = switch (day) {\n    case 1 -> \"Monday\";\n    case 2 -> \"Tuesday\";\n    case 3 -> \"Wednesday\";\n    default -> \"Other\";\n};\nSystem.out.println(name);" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        int month = 4;\n        // Use switch to print the season for the given month\n    }\n}"
+  },
+  {
+    "id": "basics/foreach",
+    "title": "Guide to the Java forEach Loop",
+    "body": "The enhanced `for` (for-each) loop iterates over arrays and `Iterable` collections without managing an index.\n\n```java\nfor (Type element : collection) { ... }\n```\n\nBenefits:\n- Cleaner syntax, no off-by-one errors\n- Works with any `Iterable` (List, Set, etc.)\n\nLimitations:\n- Cannot modify the iteration index\n- Cannot remove elements safely (use `Iterator` instead)\n- No access to the current index",
+    "examples": [{ "label": "for-each over array", "code": "String[] fruits = {\"Apple\", \"Banana\", \"Cherry\"};\nfor (String fruit : fruits) {\n    System.out.println(fruit);\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        int[] numbers = {1, 2, 3, 4, 5};\n        // Use for-each to print the sum of all numbers\n    }\n}"
+  },
+  {
+    "id": "basics/immutable-objects",
+    "title": "Immutable Objects in Java",
+    "body": "An immutable object cannot be modified after creation. Benefits: thread-safe by default, safe to share and cache, easier to reason about.\n\nTo make a class immutable:\n1. Declare the class `final`\n2. Make all fields `private final`\n3. No setter methods\n4. Defensive copies of mutable fields in the constructor\n\n`String` is the most common example — every string operation returns a *new* String.",
+    "examples": [{ "label": "Immutable class", "code": "public final class Point {\n    private final int x;\n    private final int y;\n    public Point(int x, int y) { this.x = x; this.y = y; }\n    public int getX() { return x; }\n    public int getY() { return y; }\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // String is immutable — show that concatenation creates a new object\n        String s = \"Hello\";\n        String t = s.concat(\" World\");\n        System.out.println(s == t); // What prints and why?\n    }\n}"
+  },
+  {
+    "id": "basics/modularity",
+    "title": "A Guide to Java Modularity",
+    "body": "Java 9 introduced the Java Platform Module System (JPMS). A module is a named, self-describing collection of packages declared in `module-info.java`.\n\n```java\nmodule com.example.app {\n    requires java.base;\n    exports com.example.app.api;\n}\n```\n\n- `requires` — declares a dependency on another module\n- `exports` — makes packages accessible to other modules\n- `opens` — allows reflective access\n\nModules enforce strong encapsulation at the package level, beyond what `public`/`private` provide.",
+    "examples": [{ "label": "module-info.java", "code": "module com.example.app {\n    requires java.base;\n    exports com.example.app.api;\n}" }],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // Print the module of the String class\n        System.out.println(String.class.getModule().getName());\n    }\n}"
+  }
+]

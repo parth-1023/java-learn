@@ -1,0 +1,47 @@
+[
+  {
+    "id": "strings/all-about",
+    "title": "All About String in Java",
+    "body": "`String` is one of the most used classes in Java. It represents a sequence of Unicode characters and is **immutable** — once created, its content never changes.\n\nKey facts:\n- `String` is in `java.lang` and auto-imported\n- String literals are interned — `\"hello\" == \"hello\"` is typically `true`\n- Concatenation with `+` is convenient but creates new objects\n- Use `StringBuilder` for repeated concatenation in loops\n\nUseful `String` methods:\n- `length()`, `charAt(i)`, `substring(from, to)`\n- `indexOf()`, `contains()`, `startsWith()`, `endsWith()`\n- `toLowerCase()`, `toUpperCase()`, `trim()`, `strip()`\n- `split(regex)`, `join(delimiter, parts)`\n- `replace()`, `replaceAll(regex)`\n- `format()` / `formatted()` — printf-style formatting\n\nJava 13+ added text blocks for multiline strings using `\"\"\"`.",
+    "examples": [
+      { "label": "Common String operations", "code": "String s = \"  Hello, World!  \";\nSystem.out.println(s.strip());          // \"Hello, World!\"\nSystem.out.println(s.toLowerCase());    // \"  hello, world!  \"\nSystem.out.println(s.contains(\"World\")); // true\nString[] parts = \"a,b,c\".split(\",\");\nString joined = String.join(\"-\", parts); // \"a-b-c\"" }
+    ],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        String sentence = \"The quick brown fox jumps over the lazy dog\";\n        // 1. Print the number of characters\n        // 2. Print the sentence in uppercase\n        // 3. Check if it contains \"fox\"\n        // 4. Replace \"fox\" with \"cat\" and print\n        // 5. Split by spaces and print the number of words\n    }\n}"
+  },
+  {
+    "id": "strings/immutable",
+    "title": "Why String Is Immutable in Java?",
+    "body": "`String` is immutable in Java by design. Once a `String` object is created, its character array cannot be modified.\n\n**Reasons for immutability:**\n\n1. **String Pool / Interning** — the JVM caches string literals in a pool. Multiple references can safely point to the same object because no one can change it.\n\n2. **Thread safety** — immutable objects are inherently thread-safe with no synchronization needed.\n\n3. **Security** — class names, file paths, and network connections use strings. Mutability could allow malicious code to change these values after validation.\n\n4. **Hash code caching** — `String` caches its hash code after first calculation, making it efficient as a `HashMap` key.\n\nBecause every modification creates a new `String`, use `StringBuilder` (single-thread) or `StringBuffer` (multi-thread) for heavy string building.",
+    "examples": [
+      { "label": "Immutability demonstration", "code": "String s = \"hello\";\nString t = s.toUpperCase(); // new object\nSystem.out.println(s); // still \"hello\"\nSystem.out.println(t); // \"HELLO\"\nSystem.out.println(s == t); // false" }
+    ],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        String original = \"Java\";\n        String modified = original.concat(\" Programming\");\n        // Are they the same object?\n        System.out.println(original == modified);\n        System.out.println(original.equals(modified));\n        // Show that string pool works for literals\n        String a = \"hello\";\n        String b = \"hello\";\n        System.out.println(a == b); // true - same pool object\n    }\n}"
+  },
+  {
+    "id": "strings/comparing",
+    "title": "Comparing Strings in Java",
+    "body": "String comparison is a common source of bugs. Java provides several ways to compare strings:\n\n**`==`** — compares references, not content. Only `true` if both variables point to the exact same object. Do **not** use for content comparison.\n\n**`equals()`** — compares character content, case-sensitive.\n\n**`equalsIgnoreCase()`** — content comparison ignoring case.\n\n**`compareTo()`** — lexicographic comparison, returns negative/zero/positive. Used for sorting.\n\n**`compareToIgnoreCase()`** — case-insensitive lexicographic order.\n\n**`matches(regex)`** — tests against a regular expression.\n\nAlways use `equals()` for content comparison. Prefer `\"literal\".equals(variable)` over `variable.equals(\"literal\")` to avoid `NullPointerException`.",
+    "examples": [
+      { "label": "equals vs ==", "code": "String a = new String(\"Java\");\nString b = new String(\"Java\");\nSystem.out.println(a == b);               // false\nSystem.out.println(a.equals(b));          // true\nSystem.out.println(a.equalsIgnoreCase(\"JAVA\")); // true\nSystem.out.println(a.compareTo(\"Java\")); // 0" }
+    ],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        String password = \"Secret123\";\n        String input = \"secret123\";\n        // 1. Check equality (case-sensitive)\n        // 2. Check equality (case-insensitive)\n        // 3. Compare \"apple\" and \"banana\" lexicographically with compareTo\n        // 4. Check if password matches pattern: at least one digit\n    }\n}"
+  },
+  {
+    "id": "strings/conversions",
+    "title": "Java String Conversions",
+    "body": "Converting between `String` and other types is extremely common.\n\n**Primitive to String:**\n- `String.valueOf(42)` — safest, handles null\n- `Integer.toString(42)` — explicit\n- `\"\" + 42` — concise but creates extra objects\n\n**String to primitive:**\n- `Integer.parseInt(\"42\")` — throws `NumberFormatException` if invalid\n- `Double.parseDouble(\"3.14\")`\n- `Boolean.parseBoolean(\"true\")` — returns `false` for anything not `\"true\"` (case-insensitive)\n\n**Object to String:**\n- `obj.toString()` — defined on every object; override for custom output\n- `String.valueOf(obj)` — returns `\"null\"` safely if obj is null\n\n**String to char array:**\n- `str.toCharArray()`\n- `str.chars()` — returns an `IntStream` of char values",
+    "examples": [
+      { "label": "Type conversions", "code": "// Primitive → String\nString s = String.valueOf(3.14);\nString n = Integer.toString(255, 16); // \"ff\" (hex)\n\n// String → primitive\nint age = Integer.parseInt(\"25\");\ndouble pi = Double.parseDouble(\"3.14159\");\n\n// String ↔ char array\nchar[] chars = \"hello\".toCharArray();\nString back = new String(chars);" }
+    ],
+    "starterCode": "public class Main {\n    public static void main(String[] args) {\n        // 1. Convert int 255 to its hex string representation\n        // 2. Parse \"3.14\" to a double and print it * 2\n        // 3. Convert the char array {'J','a','v','a'} to a String\n        // 4. Safely convert a null object to String using String.valueOf\n        Object obj = null;\n        System.out.println(String.valueOf(obj)); // should print \"null\"\n    }\n}"
+  },
+  {
+    "id": "strings/tostring",
+    "title": "Java toString() Method",
+    "body": "`toString()` is defined in `java.lang.Object` and is called whenever an object is converted to a string — during concatenation, `System.out.println()`, or logging.\n\nThe default implementation returns `ClassName@hexHashCode`, which is rarely useful. Override it to provide meaningful output.\n\n```java\n@Override\npublic String toString() {\n    return \"Person{name='\" + name + \"', age=\" + age + \"}\";\n}\n```\n\nBest practices:\n- Include all significant fields\n- Use `String.format()` or `formatted()` for complex output\n- Return a consistent, readable format (useful for debugging)\n- `record` types auto-generate a sensible `toString()`\n- Lombok `@ToString` generates it automatically\n\nNever call `toString()` on a potentially null reference — prefer `String.valueOf(obj)` or `Objects.toString(obj, default)`.",
+    "examples": [
+      { "label": "Custom toString()", "code": "public class Product {\n    String name;\n    double price;\n    Product(String name, double price) {\n        this.name = name; this.price = price;\n    }\n    @Override\n    public String toString() {\n        return \"Product[name=%s, price=%.2f]\".formatted(name, price);\n    }\n}\nSystem.out.println(new Product(\"Widget\", 9.99));" }
+    ],
+    "starterCode": "public class Main {\n    static class Student {\n        String name;\n        int grade;\n        Student(String name, int grade) {\n            this.name = name; this.grade = grade;\n        }\n        // Override toString() to return: \"Student{name='Alice', grade=90}\"\n    }\n    public static void main(String[] args) {\n        Student s = new Student(\"Alice\", 90);\n        System.out.println(s); // Uses toString()\n        System.out.println(\"Info: \" + s); // Concatenation also uses toString()\n    }\n}"
+  }
+]

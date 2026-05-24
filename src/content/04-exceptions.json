@@ -1,0 +1,56 @@
+[
+  {
+    "id": "exceptions/handling",
+    "title": "Exception Handling in Java",
+    "body": "An **exception** is an event that disrupts normal program flow. Java uses a structured exception-handling mechanism with `try`, `catch`, `finally`, and `throw`.\n\n```java\ntry {\n    // code that may throw\n} catch (IOException e) {\n    // handle specific exception\n} catch (Exception e) {\n    // handle any other exception\n} finally {\n    // always runs — cleanup code\n}\n```\n\nKey rules:\n- Catch more specific exceptions before more general ones\n- `finally` runs even if an exception is thrown or a `return` is executed\n- Multi-catch (Java 7+): `catch (IOException | SQLException e)`\n- Don't swallow exceptions silently — at minimum log them\n- Use `try-with-resources` for `AutoCloseable` resources\n\nExceptions propagate up the call stack until caught or the program terminates.",
+    "examples": [
+      { "label": "try-catch-finally", "code": "try {\n    int result = 10 / 0;\n} catch (ArithmeticException e) {\n    System.out.println(\"Error: \" + e.getMessage());\n} finally {\n    System.out.println(\"Always runs\");\n}" }
+    ],
+    "starterCode": "public class Main {\n    static int divide(int a, int b) {\n        // Throw an IllegalArgumentException if b is 0\n        return a / b;\n    }\n    public static void main(String[] args) {\n        try {\n            System.out.println(divide(10, 2));\n            System.out.println(divide(10, 0)); // should throw\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Caught: \" + e.getMessage());\n        } finally {\n            System.out.println(\"Done\");\n        }\n    }\n}"
+  },
+  {
+    "id": "exceptions/checked",
+    "title": "Checked and Unchecked Exceptions in Java",
+    "body": "Java exceptions fall into two categories:\n\n**Checked exceptions** — subclasses of `Exception` (but not `RuntimeException`). The compiler requires you to either catch them or declare them with `throws`. Examples: `IOException`, `SQLException`, `ClassNotFoundException`.\n\n**Unchecked exceptions** — subclasses of `RuntimeException`. No compiler enforcement. Examples: `NullPointerException`, `ArrayIndexOutOfBoundsException`, `IllegalArgumentException`.\n\n**Errors** — `OutOfMemoryError`, `StackOverflowError` — indicate JVM-level problems, not application bugs. Do not catch these.\n\n**Debate:** Many modern frameworks and projects prefer unchecked exceptions because checked exceptions add boilerplate. The key is to use exceptions that are meaningful and actionable.",
+    "examples": [
+      { "label": "Checked vs unchecked", "code": "// Checked — must handle\ntry {\n    new java.io.FileReader(\"file.txt\"); // throws IOException\n} catch (java.io.IOException e) {\n    System.out.println(\"File not found\");\n}\n\n// Unchecked — no compile-time requirement\nString s = null;\nSystem.out.println(s.length()); // NullPointerException at runtime" }
+    ],
+    "starterCode": "import java.io.*;\npublic class Main {\n    // Method with checked exception declaration\n    static String readFirstLine(String path) throws IOException {\n        try (BufferedReader br = new BufferedReader(new FileReader(path))) {\n            return br.readLine();\n        }\n    }\n    public static void main(String[] args) {\n        try {\n            String line = readFirstLine(\"nonexistent.txt\");\n            System.out.println(line);\n        } catch (IOException e) {\n            // Handle checked exception\n            System.out.println(\"IO Error: \" + e.getMessage());\n        }\n    }\n}"
+  },
+  {
+    "id": "exceptions/custom",
+    "title": "Create a Custom Exception in Java",
+    "body": "Custom exceptions make your error handling domain-specific and self-documenting. Create a custom exception by extending `Exception` (checked) or `RuntimeException` (unchecked).\n\n```java\npublic class InsufficientFundsException extends RuntimeException {\n    private final double amount;\n    public InsufficientFundsException(double amount) {\n        super(\"Insufficient funds: need \" + amount);\n        this.amount = amount;\n    }\n    public double getAmount() { return amount; }\n}\n```\n\nBest practices:\n- Include a meaningful message and any relevant context fields\n- Provide multiple constructors (message, message+cause)\n- Name it clearly: `UserNotFoundException`, not `NotFoundException`\n- Prefer unchecked for programming errors; checked for recoverable conditions\n- Always pass the original exception as a cause when wrapping",
+    "examples": [
+      { "label": "Custom exception with cause", "code": "public class DataAccessException extends RuntimeException {\n    public DataAccessException(String msg, Throwable cause) {\n        super(msg, cause);\n    }\n}\n\ntry { /* DB operation */ }\ncatch (SQLException e) {\n    throw new DataAccessException(\"Failed to load user\", e);\n}" }
+    ],
+    "starterCode": "public class Main {\n    // Create a custom checked exception: AgeValidationException\n    // It should store the invalid age value\n\n    static void validateAge(int age) throws Exception {\n        // Throw AgeValidationException if age < 0 or age > 150\n    }\n    public static void main(String[] args) {\n        try {\n            validateAge(-1);\n        } catch (Exception e) {\n            System.out.println(e.getMessage());\n        }\n    }\n}"
+  },
+  {
+    "id": "exceptions/chained",
+    "title": "Chained Exceptions in Java",
+    "body": "**Exception chaining** (wrapping) preserves the original cause when re-throwing. This maintains the full diagnostic stack trace.\n\n```java\ntry {\n    // low-level operation\n} catch (IOException e) {\n    throw new ServiceException(\"Failed to load config\", e); // e is the cause\n}\n```\n\nThe cause is accessible via:\n- `e.getCause()` — the original exception\n- `e.printStackTrace()` — shows the full chain\n\n**Why it matters:** Without chaining, you lose the root cause. Catching `IOException` and throwing `new RuntimeException(\"error\")` discards the original stack trace.\n\nAll `Throwable` constructors accept an optional `cause` parameter. Use `initCause()` when using a constructor that doesn't accept a cause.",
+    "examples": [
+      { "label": "Exception chaining", "code": "class AppException extends RuntimeException {\n    AppException(String msg, Throwable cause) { super(msg, cause); }\n}\n\ntry {\n    Integer.parseInt(\"not-a-number\");\n} catch (NumberFormatException e) {\n    throw new AppException(\"Invalid config value\", e);\n}" }
+    ],
+    "starterCode": "public class Main {\n    static class RepositoryException extends RuntimeException {\n        RepositoryException(String msg, Throwable cause) { super(msg, cause); }\n    }\n    static void loadFromDB() {\n        try {\n            // Simulate a low-level failure\n            throw new RuntimeException(\"Connection refused\");\n        } catch (RuntimeException e) {\n            throw new RepositoryException(\"Cannot load user data\", e);\n        }\n    }\n    public static void main(String[] args) {\n        try {\n            loadFromDB();\n        } catch (RepositoryException e) {\n            System.out.println(\"High-level: \" + e.getMessage());\n            System.out.println(\"Cause: \" + e.getCause().getMessage());\n        }\n    }\n}"
+  },
+  {
+    "id": "exceptions/throw-throws",
+    "title": "Difference Between Throw and Throws in Java",
+    "body": "`throw` and `throws` are related but distinct keywords:\n\n**`throw`** — an **action**. Used inside a method body to actually throw an exception instance:\n```java\nthrow new IllegalArgumentException(\"Value cannot be negative\");\n```\n\n**`throws`** — a **declaration**. Used in a method signature to declare that the method may throw a checked exception:\n```java\npublic void readFile(String path) throws IOException { ... }\n```\n\nKey differences:\n- `throw` takes an exception object; `throws` takes exception class names\n- `throw` is in the method body; `throws` is in the method signature\n- You can `throw` unchecked exceptions without `throws`\n- `throws` only needed for checked exceptions\n- A method can `throws` multiple exceptions: `throws IOException, SQLException`",
+    "examples": [
+      { "label": "throw vs throws", "code": "// throws declares potential checked exceptions\npublic String readFile(String path) throws IOException {\n    // throw actually throws the exception\n    if (path == null) throw new IllegalArgumentException(\"Path is null\");\n    try (var r = new java.io.FileReader(path)) {\n        return \"content\";\n    }\n}" }
+    ],
+    "starterCode": "import java.io.*;\npublic class Main {\n    // Declare that this method may throw IOException\n    static String readContent(String filename) throws IOException {\n        if (filename == null || filename.isEmpty()) {\n            throw new IllegalArgumentException(\"Filename cannot be empty\");\n        }\n        // Simulate reading — throw IOException for missing files\n        throw new IOException(\"File not found: \" + filename);\n    }\n    public static void main(String[] args) {\n        try {\n            readContent(\"\");\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Validation: \" + e.getMessage());\n        } catch (IOException e) {\n            System.out.println(\"IO: \" + e.getMessage());\n        }\n    }\n}"
+  },
+  {
+    "id": "exceptions/try-resources",
+    "title": "Java – Try with Resources",
+    "body": "**Try-with-resources** (Java 7+) automatically closes resources that implement `AutoCloseable` after the try block, even if an exception occurs.\n\n```java\ntry (InputStream in = new FileInputStream(\"file.txt\");\n     BufferedReader br = new BufferedReader(new InputStreamReader(in))) {\n    String line = br.readLine();\n} // in and br are automatically closed here\n```\n\nBenefits:\n- Eliminates `finally { resource.close(); }` boilerplate\n- Handles the case where both the try block and `close()` throw — suppressed exceptions are attached to the primary exception\n- Resources are closed in reverse order of declaration\n\nAny class implementing `AutoCloseable` (one method: `void close() throws Exception`) can be used. Java 9 allows using effectively-final variables declared outside the try block.",
+    "examples": [
+      { "label": "Try-with-resources", "code": "try (var br = new java.io.BufferedReader(new java.io.FileReader(\"file.txt\"))) {\n    String line;\n    while ((line = br.readLine()) != null) {\n        System.out.println(line);\n    }\n} catch (java.io.IOException e) {\n    System.err.println(\"Error: \" + e.getMessage());\n}" }
+    ],
+    "starterCode": "public class Main {\n    static class ManagedResource implements AutoCloseable {\n        String name;\n        ManagedResource(String name) {\n            this.name = name;\n            System.out.println(name + \" opened\");\n        }\n        public void close() {\n            System.out.println(name + \" closed\");\n        }\n        void use() { System.out.println(name + \" in use\"); }\n    }\n    public static void main(String[] args) {\n        // Use try-with-resources to open, use, and auto-close two resources\n        // Observe the close order\n    }\n}"
+  }
+]
