@@ -1,6 +1,6 @@
-export default function OutputPanel({ output, error, loading }) {
+export default function OutputPanel({ output, error, loading, height }) {
   return (
-    <div className="output-strip">
+    <div className="output-strip" style={height != null ? { height } : undefined}>
       <span className="output-label">OUTPUT</span>
 
       {loading && (

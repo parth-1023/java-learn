@@ -495,15 +495,44 @@ body.light .toggle-thumb { transform: translateX(18px); }
 
 /* ── OUTPUT STRIP ── */
 .output-strip {
-  height: 40px;
+  height: 40px;            /* default; overridden by inline style when resized */
   background: var(--bg-output);
-  border-top: 1px solid var(--border);
-  padding: 0 16px;
+  border-top: none;        /* handle provides the visual divider */
+  padding: 8px 16px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   flex-shrink: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── OUTPUT RESIZE HANDLE ── */
+.output-resize-handle {
+  height: 5px;
+  flex-shrink: 0;
+  background: var(--border);
+  cursor: row-resize;
+  position: relative;
+  transition: background 0.15s;
+}
+.output-resize-handle:hover,
+.output-resize-handle:active {
+  background: var(--accent-orange);
+}
+.output-resize-handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+.output-resize-handle:hover::after {
+  background: var(--accent-orange);
 }
 
 .output-label {
@@ -519,18 +548,16 @@ body.light .toggle-thumb { transform: translateX(18px); }
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   color: var(--accent-green);
-  white-space: pre;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .output-error {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   color: var(--accent-red);
-  white-space: pre;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .output-spinner {
