@@ -52,19 +52,6 @@ code, pre, .mono {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* ── APP SHELL ── */
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.main-body {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
 /* ── NEOBRUTALIST BUTTONS ── */
 .btn {
   display: inline-flex;
@@ -174,6 +161,8 @@ body.light .toggle-thumb { transform: translateX(18px); }
   overflow: hidden;
 }
 
+
+
 /* ── TOP NAV ── */
 .topnav {
   display: flex;
@@ -237,3 +226,98 @@ body.light .toggle-thumb { transform: translateX(18px); }
   white-space: nowrap;
   margin-left: 10px;
 }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  background: var(--bg-sidebar);
+  border-right: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.sidebar-rule {
+  width: 28px;
+  height: 3px;
+  background: var(--accent-orange);
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+.article-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+  list-style: none;
+}
+
+.article-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.1s;
+}
+.article-item:hover { background: var(--border); }
+.article-item.active { border-left-color: var(--accent-orange); background: color-mix(in srgb, var(--accent-orange) 8%, transparent); }
+.article-item.done .article-name { color: var(--text-muted); text-decoration: line-through; }
+
+.checkbox {
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--border-strong);
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: #000;
+}
+.checkbox.checked { background: var(--accent-green); border-color: var(--accent-green); }
+.checkbox.active  { border-color: var(--accent-orange); }
+
+.article-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+.article-item.active .article-name { color: var(--accent-orange); font-weight: 600; }
+
+.sidebar-footer {
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.progress-count { color: var(--accent-orange); }
