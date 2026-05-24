@@ -15,12 +15,19 @@ export function usePiston() {
     setError(null)
 
     try {
+      // Wandbox saves the main file as prog.java, so the public class must be named 'prog'.
+      // Rename the public class (and all references to it) before sending.
+      const classMatch = code.match(/public\s+class\s+(\w+)/)
+      const wandboxCode = classMatch
+        ? code.replace(new RegExp(`\\b${classMatch[1]}\\b`, 'g'), 'prog')
+        : code
+
       const res = await fetch(WANDBOX_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           compiler: 'openjdk-jdk-22+36',
-          code,
+          code: wandboxCode,
         }),
       })
 

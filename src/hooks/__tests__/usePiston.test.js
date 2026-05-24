@@ -77,5 +77,13 @@ test('posts to Wandbox with correct payload', async () => {
   expect(url).toBe('https://wandbox.org/api/compile.json')
   const body = JSON.parse(opts.body)
   expect(body.compiler).toBe('openjdk-jdk-22+36')
-  expect(body.code).toBe('public class Main {}')
+})
+
+test('renames public class to prog before sending', async () => {
+  mockRun({ program_output: 'ok\n' })
+  const { result } = renderHook(() => usePiston())
+  await act(() => result.current.run('public class Main {\n  public static void main(String[] args) {}\n}'))
+  const body = JSON.parse(fetch.mock.calls[0][1].body)
+  expect(body.code).toContain('public class prog')
+  expect(body.code).not.toContain('class Main')
 })
