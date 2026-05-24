@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { sections } from './content/index'
 import { useProgress } from './hooks/useProgress'
 import TopNav from './components/TopNav'
@@ -36,7 +36,7 @@ export default function App() {
     if (next) setCurrentArticleId(next.id)
   }, [currentSectionId, markComplete])
 
-  const progress = getProgress(sections)
+  const progress = useMemo(() => getProgress(sections), [getProgress])
   const currentSection = sections.find(s => s.id === currentSectionId)
   const currentArticle = currentSection.articles.find(a => a.id === currentArticleId)
 
